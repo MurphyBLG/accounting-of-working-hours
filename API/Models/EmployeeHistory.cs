@@ -4,7 +4,7 @@ public partial class EmployeeHistory
 {
     public Guid? EmployeeHistoryId { get; set; }
 
-    public Guid? EmployeeId { get; set; }
+    public int EmployeeId { get; set; }
 
     public Guid? PositionId { get; set; }
 

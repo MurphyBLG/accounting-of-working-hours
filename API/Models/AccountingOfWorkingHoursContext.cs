@@ -51,12 +51,6 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
             entity.HasIndex(e => e.PassportNumber, "employee_passport_number_key").IsUnique();
 
-            entity.Property(e => e.Password)
-                .HasMaxLength(255)
-                .HasColumnName("password");
-
-            entity.HasIndex(e => e.Password, "employee_password_key").IsUnique();
-            
             entity.Property(e => e.StartOfLuchSeniority).HasColumnName("start_of_luch_seniority");
             entity.Property(e => e.StartOfTotalSeniority).HasColumnName("start_of_total_seniority");
             

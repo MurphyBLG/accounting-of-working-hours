@@ -2,6 +2,8 @@ namespace API.Models;
 
 public class EmployeeRegistrationDTO
 {
+    public int Password { get; set; }
+
     public string Name { get; set; } = null!;
 
     public string Surname { get; set; } = null!;
@@ -21,8 +23,6 @@ public class EmployeeRegistrationDTO
     public string StartOfLuchSeniority { get; set; } = null!;
 
     public string? DateOfTermination { get; set; }
-
-    public string Password { get; set; } = null!;
 
     public Guid? PositionId { get; set; }
 

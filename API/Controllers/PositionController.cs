@@ -31,7 +31,7 @@ public class PositionController : Controller
             return BadRequest(ex.Message);
         }
 
-        _context.SaveChanges();
+        _context.SaveChanges(); // try cath 
 
         return Ok();
     }

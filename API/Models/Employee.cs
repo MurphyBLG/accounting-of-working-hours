@@ -2,7 +2,7 @@
 
 public partial class Employee
 {
-    public Guid? EmployeeId { get; set; }
+    public int EmployeeId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -23,8 +23,6 @@ public partial class Employee
     public DateOnly StartOfLuchSeniority { get; set; }
 
     public DateOnly? DateOfTermination { get; set; }
-
-    public string Password { get; set; } = null!;
 
     public Guid? PositionId { get; set; }
 

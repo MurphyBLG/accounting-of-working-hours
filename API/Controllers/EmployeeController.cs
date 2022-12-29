@@ -2,11 +2,11 @@ using API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
-public class RegistrationController : Controller
+public class EmployeeController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;
 
-    public RegistrationController(AccountingOfWorkingHoursContext context)
+    public EmployeeController(AccountingOfWorkingHoursContext context)
     {
         this._context = context;
     }
@@ -25,7 +25,7 @@ public class RegistrationController : Controller
 
             _context.Employees.Add(new Employee
             {
-                EmployeeId = Guid.NewGuid(),
+                EmployeeId = employeeRegistrationDTO.Password,
                 Name = employeeRegistrationDTO.Name,
                 Surname = employeeRegistrationDTO.Surname,
                 Patronymic = employeeRegistrationDTO.Patronymic,
@@ -36,8 +36,7 @@ public class RegistrationController : Controller
                 StartOfTotalSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfTotalSeniority),
                 StartOfLuchSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfLuchSeniority),
                 DateOfTermination = (employeeRegistrationDTO.DateOfTermination == null) ? 
-                null : DateOnly.Parse(employeeRegistrationDTO.DateOfTermination),
-                Password = employeeRegistrationDTO.Password,
+                    null : DateOnly.Parse(employeeRegistrationDTO.DateOfTermination),
                 PositionId = employeeRegistrationDTO.PositionId,
                 Salary = currentEmployeePosition.Salary,
                 QuarterlyBonus = currentEmployeePosition.QuarterlyBonus,
