@@ -1,5 +1,6 @@
 using System.Text.Json;
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
@@ -13,6 +14,7 @@ public class PositionController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public IActionResult CreatePosition([FromBody] PositionPostDTO positionPostDTO)
     {
         try
@@ -31,8 +33,14 @@ public class PositionController : Controller
             return BadRequest(ex.Message);
         }
 
-        _context.SaveChanges(); // try cath 
-
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
         return Ok();
     }
 }

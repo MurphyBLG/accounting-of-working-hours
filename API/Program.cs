@@ -12,9 +12,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// PostgresDb connecton
 builder.Services.AddDbContext<AccountingOfWorkingHoursContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AOWHDb")));
 
+// JWT auth
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -30,6 +33,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			IssuerSigningKey = new SymmetricSecurityKey(key)
 		};
     });
+
+// Token Services
+builder.Services.AddTransient<ITokenService, TokenService>();	
 
 var app = builder.Build();
 
