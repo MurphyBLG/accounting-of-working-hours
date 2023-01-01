@@ -150,6 +150,10 @@ namespace API.Migrations
                         .HasColumnType("date")
                         .HasColumnName("end_date_of_work_in_current_position");
 
+                    b.Property<DateOnly>("EndDateOfWorkInTheStock")
+                        .HasColumnType("date")
+                        .HasColumnName("end_date_of_work_in_stock");
+
                     b.Property<string>("Link")
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
@@ -162,6 +166,15 @@ namespace API.Migrations
                     b.Property<DateOnly>("StartDateOfWorkInCurrentPosition")
                         .HasColumnType("date")
                         .HasColumnName("start_date_of_work_in_current_position");
+
+                    b.Property<DateOnly>("StartDateOfWorkInTheStock")
+                        .HasColumnType("date")
+                        .HasColumnName("start_date_of_work_in_stock");
+
+                    b.Property<string>("Stock")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("stock");
 
                     b.HasKey("EmployeeHistoryId")
                         .HasName("employee_history_pkey");
@@ -210,56 +223,11 @@ namespace API.Migrations
                     b.ToTable("position", (string)null);
                 });
 
-            modelBuilder.Entity("API.Models.StocksHistory", b =>
-                {
-                    b.Property<Guid?>("StockHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("stock_history_id");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("integer")
-                        .HasColumnName("employee_id");
-
-                    b.Property<DateOnly>("EndDateOfWorkInTheStock")
-                        .HasColumnType("date")
-                        .HasColumnName("end_date_of_work_in_the_stock");
-
-                    b.Property<string>("Link")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("link");
-
-                    b.Property<Guid?>("PositionId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("position_id");
-
-                    b.Property<DateOnly>("StartDateOfWorkInTheStock")
-                        .HasColumnType("date")
-                        .HasColumnName("start_date_of_work_in_the_stock");
-
-                    b.Property<string>("Stock")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("stock");
-
-                    b.HasKey("StockHistoryId")
-                        .HasName("stocks_history_pkey");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("PositionId");
-
-                    b.ToTable("stocks_history", (string)null);
-                });
-
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
                     b.HasOne("API.Models.Position", "Position")
                         .WithMany("Employees")
                         .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("employee_position_id_fkey");
 
                     b.Navigation("Position");
@@ -277,28 +245,7 @@ namespace API.Migrations
                     b.HasOne("API.Models.Position", "Position")
                         .WithMany("EmployeeHistories")
                         .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("employee_history_position_id_fkey");
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Position");
-                });
-
-            modelBuilder.Entity("API.Models.StocksHistory", b =>
-                {
-                    b.HasOne("API.Models.Employee", "Employee")
-                        .WithMany("StocksHistories")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("stocks_history_employee_id_fkey");
-
-                    b.HasOne("API.Models.Position", "Position")
-                        .WithMany("StocksHistories")
-                        .HasForeignKey("PositionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .HasConstraintName("stocks_history_position_id_fkey");
 
                     b.Navigation("Employee");
 
@@ -308,8 +255,6 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
                     b.Navigation("EmployeeHistories");
-
-                    b.Navigation("StocksHistories");
                 });
 
             modelBuilder.Entity("API.Models.Position", b =>
@@ -317,8 +262,6 @@ namespace API.Migrations
                     b.Navigation("EmployeeHistories");
 
                     b.Navigation("Employees");
-
-                    b.Navigation("StocksHistories");
                 });
 #pragma warning restore 612, 618
         }

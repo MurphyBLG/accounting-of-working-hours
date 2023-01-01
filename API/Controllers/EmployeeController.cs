@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 [Route("[controller]")]
 public class EmployeeController : Controller
 {
+    private readonly Guid _firedPositionId = new ("3d7e357d-ca7f-44c1-bbfb-a6250c5b7239");
     private readonly AccountingOfWorkingHoursContext _context;
 
     public EmployeeController(AccountingOfWorkingHoursContext context)
@@ -56,5 +57,38 @@ public class EmployeeController : Controller
 
         _context.SaveChanges();
         return Ok();
+    }
+
+    [HttpPost("{EmployeeId:int}")]
+    public async Task<IActionResult> FireEmployee(int employeeId)
+    {
+        Employee? currentEmployee = _context.Employees.Find(employeeId);
+
+        if (currentEmployee == null)
+        {
+            return BadRequest("Такого сотрудника не существует");
+        }
+
+        await _context.EmployeeHistories.AddAsync(new EmployeeHistory
+        {
+            EmployeeHistoryId = Guid.NewGuid(),
+            EmployeeId = currentEmployee.EmployeeId,
+            PositionId = currentEmployee.PositionId,
+            Link = currentEmployee.Link,
+            Stock = currentEmployee.Stock,
+            StartDateOfWorkInCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition,
+            EndDateOfWorkInCurrentPosition = DateOnly.FromDateTime(DateTime.Now),
+            StartDateOfWorkInTheStock = currentEmployee.DateOfStartInTheCurrentStock,
+            EndDateOfWorkInTheStock = DateOnly.FromDateTime(DateTime.Now)
+        });
+
+        currentEmployee.DateOfTermination = DateOnly.FromDateTime(DateTime.Now);
+        currentEmployee.ForkliftControl = false;
+        currentEmployee.RolleyesControl = false;
+        currentEmployee.PositionId = _firedPositionId;
+
+        _context.SaveChanges();
+
+        return Ok(); 
     }
 }

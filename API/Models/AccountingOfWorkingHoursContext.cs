@@ -19,8 +19,6 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
     public virtual DbSet<Position> Positions { get; set; } = null!;
 
-    public virtual DbSet<StocksHistory> StocksHistories { get; set; } = null!;
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>(entity =>
@@ -75,7 +73,6 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
             entity.HasOne(d => d.Position).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.PositionId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employee_position_id_fkey");
         });
 
@@ -87,21 +84,24 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
             entity.Property(e => e.EmployeeHistoryId).HasColumnName("employee_history_id");
             entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
-            entity.Property(e => e.EndDateOfWorkInCurrentPosition).HasColumnName("end_date_of_work_in_current_position");
+            entity.Property(e => e.PositionId).HasColumnName("position_id");
             entity.Property(e => e.Link)
                 .HasMaxLength(255)
                 .HasColumnName("link");
-            entity.Property(e => e.PositionId).HasColumnName("position_id");
+            entity.Property(e => e.Stock)
+                .HasMaxLength(255)
+                .HasColumnName("stock");
             entity.Property(e => e.StartDateOfWorkInCurrentPosition).HasColumnName("start_date_of_work_in_current_position");
+            entity.Property(e => e.EndDateOfWorkInCurrentPosition).HasColumnName("end_date_of_work_in_current_position");
+            entity.Property(e => e.StartDateOfWorkInTheStock).HasColumnName("start_date_of_work_in_stock");
+            entity.Property(e => e.EndDateOfWorkInTheStock).HasColumnName("end_date_of_work_in_stock");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeHistories)
                 .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employee_history_employee_id_fkey");
 
             entity.HasOne(d => d.Position).WithMany(p => p.EmployeeHistories)
                 .HasForeignKey(d => d.PositionId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("employee_history_position_id_fkey");
         });
 
@@ -126,35 +126,6 @@ public partial class AccountingOfWorkingHoursContext : DbContext
             entity.Property(e => e.Salary)
                 .HasPrecision(10, 2)
                 .HasColumnName("salary");
-        });
-
-        modelBuilder.Entity<StocksHistory>(entity =>
-        {
-            entity.HasKey(e => e.StockHistoryId).HasName("stocks_history_pkey");
-
-            entity.ToTable("stocks_history");
-
-            entity.Property(e => e.StockHistoryId).HasColumnName("stock_history_id");
-            entity.Property(e => e.EmployeeId).HasColumnName("employee_id");
-            entity.Property(e => e.EndDateOfWorkInTheStock).HasColumnName("end_date_of_work_in_the_stock");
-            entity.Property(e => e.Link)
-                .HasMaxLength(255)
-                .HasColumnName("link");
-            entity.Property(e => e.PositionId).HasColumnName("position_id");
-            entity.Property(e => e.StartDateOfWorkInTheStock).HasColumnName("start_date_of_work_in_the_stock");
-            entity.Property(e => e.Stock)
-                .HasMaxLength(255)
-                .HasColumnName("stock");
-
-            entity.HasOne(d => d.Employee).WithMany(p => p.StocksHistories)
-                .HasForeignKey(d => d.EmployeeId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("stocks_history_employee_id_fkey");
-
-            entity.HasOne(d => d.Position).WithMany(p => p.StocksHistories)
-                .HasForeignKey(d => d.PositionId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("stocks_history_position_id_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

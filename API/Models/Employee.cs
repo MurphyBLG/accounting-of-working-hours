@@ -47,6 +47,4 @@ public partial class Employee
     public virtual ICollection<EmployeeHistory> EmployeeHistories { get; } = new List<EmployeeHistory>();
 
     public virtual Position? Position { get; set; }
-
-    public virtual ICollection<StocksHistory> StocksHistories { get; } = new List<StocksHistory>();
 }

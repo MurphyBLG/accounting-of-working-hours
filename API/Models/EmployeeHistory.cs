@@ -10,9 +10,15 @@ public partial class EmployeeHistory
 
     public string? Link { get; set; }
 
+    public string? Stock { get; set; }
+
     public DateOnly StartDateOfWorkInCurrentPosition { get; set; }
 
     public DateOnly EndDateOfWorkInCurrentPosition { get; set; }
+
+    public DateOnly StartDateOfWorkInTheStock { get; set; }
+
+    public DateOnly EndDateOfWorkInTheStock { get; set; }
 
     public virtual Employee? Employee { get; set; }
 
