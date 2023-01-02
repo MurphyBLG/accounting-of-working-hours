@@ -1,6 +1,5 @@
 using System.Text.Json;
 using API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
@@ -14,7 +13,6 @@ public class PositionController : Controller
     }
 
     [HttpPost]
-    [Authorize]
     public IActionResult CreatePosition([FromBody] PositionPostDTO positionPostDTO)
     {
         try
@@ -42,5 +40,38 @@ public class PositionController : Controller
             return BadRequest(ex.Message);
         }
         return Ok();
+    }
+
+    [HttpGet("{PositionId}")]
+    public IActionResult GetPosition(string positionId)
+    {
+        Position? position = _context.Positions.Find(new Guid(positionId));
+
+        if (position == null)
+        {
+            return BadRequest("Такая должность не существует");
+        }
+
+        return Ok(new PositionGetDTO
+        {
+            PositionId = position.PositionId,
+            Name = position.Name,
+            Salary = position.Salary,
+            QuarterlyBonus = position.QuarterlyBonus,
+            InterfaceAccesses = position.InterfaceAccesses
+        });
+    }
+
+    [HttpGet]
+    public IActionResult GetAllPositions()
+    {
+        IEnumerable<PositionGetAllDTO>? result = from p in _context.Positions
+                                          select new PositionGetAllDTO 
+                                          {
+                                            PositionId = p.PositionId,
+                                            Name = p.Name
+                                          };
+
+        return Ok(result);
     }
 }
