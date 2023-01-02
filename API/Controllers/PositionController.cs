@@ -66,11 +66,11 @@ public class PositionController : Controller
     public IActionResult GetAllPositions()
     {
         IEnumerable<PositionGetAllDTO>? result = from p in _context.Positions
-                                          select new PositionGetAllDTO 
-                                          {
-                                            PositionId = p.PositionId,
-                                            Name = p.Name
-                                          };
+                                                 select new PositionGetAllDTO
+                                                 {
+                                                     PositionId = p.PositionId,
+                                                     Name = p.Name
+                                                 };
 
         return Ok(result);
     }

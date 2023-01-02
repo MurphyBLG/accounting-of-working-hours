@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 [Route("[controller]")]
 public class EmployeeController : Controller
 {
-    private readonly Guid _firedPositionId = new ("3d7e357d-ca7f-44c1-bbfb-a6250c5b7239");
+    private readonly Guid _firedPositionId = new("3d7e357d-ca7f-44c1-bbfb-a6250c5b7239");
     private readonly AccountingOfWorkingHoursContext _context;
 
     public EmployeeController(AccountingOfWorkingHoursContext context)
@@ -36,7 +36,7 @@ public class EmployeeController : Controller
                 PassportIssueDate = DateOnly.Parse(employeeRegistrationDTO.PassportIssueDate),
                 StartOfTotalSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfTotalSeniority),
                 StartOfLuchSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfLuchSeniority),
-                DateOfTermination = (employeeRegistrationDTO.DateOfTermination == null) ? 
+                DateOfTermination = (employeeRegistrationDTO.DateOfTermination == null) ?
                     null : DateOnly.Parse(employeeRegistrationDTO.DateOfTermination),
                 PositionId = employeeRegistrationDTO.PositionId,
                 Salary = currentEmployeePosition.Salary,
@@ -89,7 +89,7 @@ public class EmployeeController : Controller
 
         _context.SaveChanges();
 
-        return Ok(); 
+        return Ok();
     }
 
     [HttpGet("{EmployeeId:int}")]
@@ -104,7 +104,7 @@ public class EmployeeController : Controller
 
         _context.Entry(currentEmployee).Reference(e => e.Position).Load();
 
-        PositionGetDTO currentEmployeePosition = new ()
+        PositionGetDTO currentEmployeePosition = new()
         {
             PositionId = currentEmployee.PositionId,
             Name = currentEmployee.Position!.Name,
@@ -138,4 +138,18 @@ public class EmployeeController : Controller
         });
     }
 
+    [HttpGet]
+    public IActionResult GetAllEmployees()
+    {
+        IEnumerable<EmployeeGetAllDTO>? result = from e in _context.Employees
+                                                 select new EmployeeGetAllDTO
+                                                 {
+                                                     Password = e.EmployeeId,
+                                                     Name = e.Name,
+                                                     Surname = e.Surname,
+                                                     Patronymic = e.Patronymic
+                                                 };
+
+        return Ok(result);
+    }
 }
