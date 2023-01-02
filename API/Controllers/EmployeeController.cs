@@ -91,4 +91,51 @@ public class EmployeeController : Controller
 
         return Ok(); 
     }
+
+    [HttpGet("{EmployeeId:int}")]
+    public IActionResult GetEmployee(int employeeId)
+    {
+        Employee? currentEmployee = _context.Employees.Find(employeeId);
+
+        if (currentEmployee == null)
+        {
+            return BadRequest("Такого сотрудника не существует");
+        }
+
+        _context.Entry(currentEmployee).Reference(e => e.Position).Load();
+
+        PositionGetDTO currentEmployeePosition = new ()
+        {
+            PositionId = currentEmployee.PositionId,
+            Name = currentEmployee.Position!.Name,
+            Salary = currentEmployee.Position!.Salary,
+            QuarterlyBonus = currentEmployee.Position!.QuarterlyBonus,
+            InterfaceAccesses = currentEmployee.Position!.InterfaceAccesses
+        };
+
+        return Ok(new EmployeeGetDTO
+        {
+            Password = currentEmployee.EmployeeId,
+            Name = currentEmployee.Name,
+            Surname = currentEmployee.Surname,
+            Patronymic = currentEmployee.Patronymic,
+            Birthday = currentEmployee.Birthday.ToString(),
+            PassportNumber = currentEmployee.PassportNumber,
+            PassportIssuer = currentEmployee.PassportIssuer,
+            PassportIssueDate = currentEmployee.PassportIssueDate.ToString(),
+            StartOfTotalSeniority = currentEmployee.StartOfTotalSeniority.ToString(),
+            StartOfLuchSeniority = currentEmployee.StartOfLuchSeniority.ToString(),
+            DateOfTermination = currentEmployee.DateOfTermination.ToString(),
+            Position = currentEmployeePosition,
+            Link = currentEmployee.Link,
+            Stock = currentEmployee.Stock,
+            ForkliftControl = currentEmployee.ForkliftControl,
+            RolleyesControl = currentEmployee.RolleyesControl,
+            Salary = currentEmployee.Salary,
+            PercentageOfSalaryInAdvance = currentEmployee.PercentageOfSalaryInAdvance,
+            DateOfStartInTheCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition.ToString(),
+            DateOfStartInTheCurrentStock = currentEmployee.DateOfStartInTheCurrentStock.ToString()
+        });
+    }
+
 }
