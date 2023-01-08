@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
+[Authorize]
 public class LogInController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;

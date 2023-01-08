@@ -1,8 +1,10 @@
 using System.Text.Json;
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
+[Authorize]
 public class PositionController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;
