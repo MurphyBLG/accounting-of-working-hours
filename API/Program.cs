@@ -13,6 +13,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: "front-end",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        }
+
+    );
+});
+
 // PostgresDb connecton
 builder.Services.AddDbContext<AccountingOfWorkingHoursContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("AOWHDb")));
@@ -22,20 +36,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         var key = Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]!);
-		options.TokenValidationParameters = new TokenValidationParameters
-		{
-			ValidateIssuer = true,
-			ValidateAudience = true,
-			ValidateLifetime = true,
-			ValidateIssuerSigningKey = true,
-			ValidIssuer = builder.Configuration["JWT:Issuer"],
-			ValidAudience = builder.Configuration["JWT:Audience"],
-			IssuerSigningKey = new SymmetricSecurityKey(key)
-		};
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
     });
 
 // Token Services
-builder.Services.AddTransient<ITokenService, TokenService>();	
+builder.Services.AddTransient<ITokenService, TokenService>();
 
 var app = builder.Build();
 
@@ -47,6 +61,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("front-end");
 
 app.UseAuthentication();
 
