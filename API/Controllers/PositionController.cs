@@ -45,9 +45,9 @@ public class PositionController : Controller
     }
 
     [HttpGet("{PositionId}")]
-    public IActionResult GetPosition(string positionId)
+    public async Task<IActionResult> GetPosition(string positionId)
     {
-        Position? position = _context.Positions.Find(new Guid(positionId));
+        Position? position = await _context.Positions.FindAsync(new Guid(positionId));
 
         if (position == null)
         {
@@ -75,5 +75,33 @@ public class PositionController : Controller
                                                  };
 
         return Ok(result);
+    }
+
+    [HttpPut] 
+    public IActionResult UpdatePosition([FromBody] PositionUpdateDTO positionUpdateDTO)
+    {
+        Position? positionToUpdate = _context.Positions.Find(positionUpdateDTO.PositionId);
+
+        if (positionToUpdate == null)
+        {
+            return BadRequest("Такая должность не существует");
+        }
+        
+        positionToUpdate.PositionId = positionUpdateDTO.PositionId;
+        positionToUpdate.Name = positionUpdateDTO.Name;
+        positionToUpdate.Salary = positionUpdateDTO.Salary;
+        positionToUpdate.QuarterlyBonus = positionUpdateDTO.QuarterlyBonus;
+        positionToUpdate.InterfaceAccesses = positionUpdateDTO.InterfaceAccesses;
+
+        try
+        {
+            _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+        return Ok();
     }
 }

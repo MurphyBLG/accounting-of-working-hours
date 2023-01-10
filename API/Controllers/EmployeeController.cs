@@ -62,7 +62,7 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("{EmployeeId:int}")]
-    public async Task<IActionResult> FireEmployee(int employeeId)
+    public IActionResult FireEmployee(int employeeId)
     {
         Employee? currentEmployee = _context.Employees.Find(employeeId);
 
@@ -71,7 +71,7 @@ public class EmployeeController : Controller
             return BadRequest("Такого сотрудника не существует");
         }
 
-        await _context.EmployeeHistories.AddAsync(new EmployeeHistory
+        _context.EmployeeHistories.Add(new EmployeeHistory
         {
             EmployeeHistoryId = Guid.NewGuid(),
             EmployeeId = currentEmployee.EmployeeId,
@@ -95,16 +95,16 @@ public class EmployeeController : Controller
     }
 
     [HttpGet("{EmployeeId:int}")]
-    public IActionResult GetEmployee(int employeeId)
+    public async Task<IActionResult> GetEmployee(int employeeId)
     {
-        Employee? currentEmployee = _context.Employees.Find(employeeId);
+        Employee? currentEmployee = await _context.Employees.FindAsync(employeeId);
 
         if (currentEmployee == null)
         {
             return BadRequest("Такого сотрудника не существует");
         }
 
-        _context.Entry(currentEmployee).Reference(e => e.Position).Load();
+        await _context.Entry(currentEmployee).Reference(e => e.Position).LoadAsync();
 
         PositionGetDTO currentEmployeePosition = new()
         {
