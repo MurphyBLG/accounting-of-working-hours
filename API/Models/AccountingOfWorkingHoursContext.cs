@@ -93,8 +93,8 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasColumnName("stock");
             entity.Property(e => e.StartDateOfWorkInCurrentPosition).HasColumnName("start_date_of_work_in_current_position");
             entity.Property(e => e.EndDateOfWorkInCurrentPosition).HasColumnName("end_date_of_work_in_current_position");
-            entity.Property(e => e.StartDateOfWorkInTheStock).HasColumnName("start_date_of_work_in_stock");
-            entity.Property(e => e.EndDateOfWorkInTheStock).HasColumnName("end_date_of_work_in_stock");
+            entity.Property(e => e.StartDateOfWorkIncurrentStock).HasColumnName("start_date_of_work_in_stock");
+            entity.Property(e => e.EndDateOfWorkInCurrentStock).HasColumnName("end_date_of_work_in_stock");
 
             entity.HasOne(d => d.Employee).WithMany(p => p.EmployeeHistories)
                 .HasForeignKey(d => d.EmployeeId)

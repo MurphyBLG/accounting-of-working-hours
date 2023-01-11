@@ -2,8 +2,6 @@ namespace API.Models;
 
 public class EmployeeUpdateDTO
 {
-    // public int Password { get; set; }
-
     public string Name { get; set; } = null!;
 
     public string Surname { get; set; } = null!;
@@ -34,11 +32,15 @@ public class EmployeeUpdateDTO
 
     public bool RolleyesControl { get; set; }
 
-    public int Salary { get; set; }
+    public decimal Salary { get; set; }
 
     public int PercentageOfSalaryInAdvance { get; set; }
+    
+    public decimal QuarterlyBonus { get; set; }
 
-    public string DateOfStartInTheCurrentPosition { get; set; } = null!;
+    public string? DateOfStartInTheCurrentPosition { get; set; }
 
-    public string DateOfStartInTheCurrentStock { get; set; } = null!;
+    public string? DateOfStartInTheCurrentStock { get; set; }
+
+    public string? DateOfStartInTheCurrentLink { get; set; }
 }

@@ -26,6 +26,8 @@ public partial class Employee
 
     public Guid? PositionId { get; set; }
 
+    public DateOnly? DateOfStartInTheCurrentPosition { get; set; }
+
     public decimal Salary { get; set; }
 
     public decimal QuarterlyBonus { get; set; }
@@ -34,15 +36,15 @@ public partial class Employee
 
     public string? Link { get; set; }
 
+    public DateOnly? DateOfStartInTheCurrentLink { get; set; }
+
     public string? Stock { get; set; }
+
+    public DateOnly? DateOfStartInTheCurrentStock { get; set; }
 
     public bool ForkliftControl { get; set; }
 
     public bool RolleyesControl { get; set; }
-
-    public DateOnly DateOfStartInTheCurrentPosition { get; set; }
-
-    public DateOnly DateOfStartInTheCurrentStock { get; set; }
 
     public virtual ICollection<EmployeeHistory> EmployeeHistories { get; } = new List<EmployeeHistory>();
 

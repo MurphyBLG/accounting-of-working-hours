@@ -39,4 +39,6 @@ public class EmployeeRegistrationDTO
     public string DateOfStartInTheCurrentPosition { get; set; } = null!;
 
     public string DateOfStartInTheCurrentStock { get; set; } = null!;
+
+    public string DateOfStartInTheCurrentLink { get; set; } = null!;
 }

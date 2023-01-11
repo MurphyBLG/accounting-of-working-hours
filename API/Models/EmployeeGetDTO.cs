@@ -38,7 +38,9 @@ public class EmployeeGetDTO
 
     public decimal PercentageOfSalaryInAdvance { get; set; }
 
-    public string DateOfStartInTheCurrentPosition { get; set; } = null!;
+    public string? DateOfStartInTheCurrentPosition { get; set; } 
 
-    public string DateOfStartInTheCurrentStock { get; set; } = null!;
+    public string? DateOfStartInTheCurrentStock { get; set; } 
+
+    public string? DateOfStartInTheCurrentLink { get; set; } 
 }
