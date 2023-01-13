@@ -1,4 +1,6 @@
-﻿namespace API.Models;
+﻿using System.Text.Json;
+
+namespace API.Models;
 
 public partial class Position
 {
@@ -15,4 +17,18 @@ public partial class Position
     public virtual ICollection<EmployeeHistory> EmployeeHistories { get; } = new List<EmployeeHistory>();
 
     public virtual ICollection<Employee> Employees { get; } = new List<Employee>();
+
+    public Position()
+    {
+
+    }
+
+    public Position(PositionPostDTO positionPostDTO)
+    {
+        PositionId = Guid.NewGuid();
+        Name = positionPostDTO.Name;
+        Salary = positionPostDTO.Salary;
+        QuarterlyBonus = positionPostDTO.QuarterlyBonus;
+        InterfaceAccesses = JsonSerializer.Serialize(positionPostDTO.InterfaceAccesses);
+    }
 }

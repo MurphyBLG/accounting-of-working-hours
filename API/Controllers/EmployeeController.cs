@@ -26,32 +26,7 @@ public class EmployeeController : Controller
                 return BadRequest("Такой должности не существует");
             }
 
-            _context.Employees.Add(new Employee // сделать конструктор
-            {
-                EmployeeId = employeeRegistrationDTO.Password,
-                Name = employeeRegistrationDTO.Name,
-                Surname = employeeRegistrationDTO.Surname,
-                Patronymic = employeeRegistrationDTO.Patronymic,
-                Birthday = DateOnly.Parse(employeeRegistrationDTO.Birthday),
-                PassportNumber = employeeRegistrationDTO.PassportNumber,
-                PassportIssuer = employeeRegistrationDTO.PassportIssuer,
-                PassportIssueDate = DateOnly.Parse(employeeRegistrationDTO.PassportIssueDate),
-                StartOfTotalSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfTotalSeniority),
-                StartOfLuchSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfLuchSeniority),
-                DateOfTermination = (employeeRegistrationDTO.DateOfTermination == null) ?
-                    null : DateOnly.Parse(employeeRegistrationDTO.DateOfTermination),
-                PositionId = employeeRegistrationDTO.PositionId,
-                Salary = currentEmployeePosition.Salary,
-                QuarterlyBonus = currentEmployeePosition.QuarterlyBonus,
-                PercentageOfSalaryInAdvance = employeeRegistrationDTO.PercentageOfSalaryInAdvance,
-                Link = employeeRegistrationDTO.Link,
-                DateOfStartInTheCurrentLink = (employeeRegistrationDTO.Link == null) ? null : DateOnly.FromDateTime(DateTime.UtcNow),
-                Stock = employeeRegistrationDTO.Stock,
-                ForkliftControl = employeeRegistrationDTO.ForkliftControl,
-                RolleyesControl = employeeRegistrationDTO.RolleyesControl,
-                DateOfStartInTheCurrentPosition = DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentPosition),
-                DateOfStartInTheCurrentStock = DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentStock)
-            });
+            _context.Employees.Add(new Employee(employeeRegistrationDTO, currentEmployeePosition));
         }
         catch (Exception ex)
         {
@@ -62,7 +37,7 @@ public class EmployeeController : Controller
         return Ok();
     }
 
-    [HttpGet("{EmployeeId:int}")] // Change employeeGetDTO
+    [HttpGet("{EmployeeId:int}")]
     public async Task<IActionResult> GetEmployee(int employeeId)
     {
         Employee? currentEmployee = await _context.Employees.FindAsync(employeeId);
@@ -74,39 +49,9 @@ public class EmployeeController : Controller
 
         await _context.Entry(currentEmployee).Reference(e => e.Position).LoadAsync();
 
-        PositionGetDTO currentEmployeePosition = new()
-        {
-            PositionId = currentEmployee.PositionId,
-            Name = currentEmployee.Position!.Name,
-            Salary = currentEmployee.Position!.Salary,
-            QuarterlyBonus = currentEmployee.Position!.QuarterlyBonus,
-            InterfaceAccesses = currentEmployee.Position!.InterfaceAccesses
-        };
+        PositionGetDTO currentEmployeePosition = new(currentEmployee);
 
-        return Ok(new EmployeeGetDTO // Сделать конструктор
-        {
-            Password = currentEmployee.EmployeeId,
-            Name = currentEmployee.Name,
-            Surname = currentEmployee.Surname,
-            Patronymic = currentEmployee.Patronymic,
-            Birthday = currentEmployee.Birthday.ToString(),
-            PassportNumber = currentEmployee.PassportNumber,
-            PassportIssuer = currentEmployee.PassportIssuer,
-            PassportIssueDate = currentEmployee.PassportIssueDate.ToString(),
-            StartOfTotalSeniority = currentEmployee.StartOfTotalSeniority.ToString(),
-            StartOfLuchSeniority = currentEmployee.StartOfLuchSeniority.ToString(),
-            DateOfTermination = currentEmployee.DateOfTermination.ToString(),
-            Position = currentEmployeePosition,
-            Link = currentEmployee.Link,
-            Stock = currentEmployee.Stock,
-            ForkliftControl = currentEmployee.ForkliftControl,
-            RolleyesControl = currentEmployee.RolleyesControl,
-            Salary = currentEmployee.Salary,
-            PercentageOfSalaryInAdvance = currentEmployee.PercentageOfSalaryInAdvance,
-            DateOfStartInTheCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition.ToString(),
-            DateOfStartInTheCurrentStock = currentEmployee.DateOfStartInTheCurrentStock.ToString(),
-            DateOfStartInTheCurrentLink = currentEmployee.DateOfStartInTheCurrentLink.ToString()
-        });
+        return Ok(new EmployeeGetDTO(currentEmployee, currentEmployeePosition));
     }
 
     [HttpGet]
@@ -124,7 +69,7 @@ public class EmployeeController : Controller
         return Ok(result);
     }
 
-    [HttpPut("{EmployeeId:int}")] // Проверить
+    [HttpPut("{EmployeeId:int}")]
     public IActionResult UpdateEmployee(int employeeId, [FromBody] EmployeeUpdateDTO employeeUpdateDTO)
     {
         Employee? currentEmployee = _context.Employees.Find(employeeId);
@@ -134,33 +79,7 @@ public class EmployeeController : Controller
             return BadRequest("Сотрудник не найден");
         }
 
-        EmployeeHistory employeeHistory = new() // Добавить конструктор в класс
-        {
-            EmployeeHistoryId = Guid.NewGuid(),
-            EmployeeId = employeeId,
-            Name = currentEmployee.Name,
-            Surname = currentEmployee.Surname,
-            Patronymic = currentEmployee.Patronymic,
-            Birthday = currentEmployee.Birthday,
-            PassportNumber = currentEmployee.PassportNumber,
-            PassportIssuer = currentEmployee.PassportIssuer,
-            PassportIssueDate = currentEmployee.PassportIssueDate,
-            StartOfTotalSeniority = currentEmployee.StartOfTotalSeniority,
-            StartOfLuchSeniority = currentEmployee.StartOfLuchSeniority,
-            DateOfTermination = currentEmployee.DateOfTermination,
-            PositionId = currentEmployee.PositionId,
-            StartDateOfWorkInCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition,
-            Salary = currentEmployee.Salary,
-            QuarterlyBonus = currentEmployee.QuarterlyBonus,
-            PercentageOfSalaryInAdvance = currentEmployee.PercentageOfSalaryInAdvance,
-            Link = currentEmployee.Link,
-            StartDateOfWorkInCurrentLink = currentEmployee.DateOfStartInTheCurrentLink,
-            Stock = currentEmployee.Stock,
-            StartDateOfWorkIncurrentStock = currentEmployee.DateOfStartInTheCurrentStock,
-            ForkliftControl = currentEmployee.ForkliftControl,
-            RolleyesControl = currentEmployee.RolleyesControl,
-            DateOfCreation = DateTime.UtcNow
-        };
+        EmployeeHistory employeeHistory = new(employeeId, currentEmployee);
 
         currentEmployee.Name = employeeUpdateDTO.Name;
         currentEmployee.Surname = employeeUpdateDTO.Surname;
@@ -172,61 +91,38 @@ public class EmployeeController : Controller
         currentEmployee.StartOfTotalSeniority = DateOnly.Parse(employeeUpdateDTO.StartOfTotalSeniority);
         currentEmployee.StartOfLuchSeniority = DateOnly.Parse(employeeUpdateDTO.StartOfLuchSeniority);
 
-        if (employeeUpdateDTO.PositionId == _firedPositionId && currentEmployee.PositionId != employeeUpdateDTO.PositionId)
-            currentEmployee.DateOfTermination = employeeUpdateDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeUpdateDTO.DateOfTermination));
+        if (currentEmployee.Stock != employeeUpdateDTO.Stock)
+        {
+            employeeHistory.EndDateOfWorkInCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
 
-        if (employeeUpdateDTO.PositionId != _firedPositionId)
-            currentEmployee.DateOfTermination = null;
+            currentEmployee.DateOfStartInTheCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
+            currentEmployee.Stock = employeeUpdateDTO.Stock;
+        }
+
+        if (currentEmployee.Link != employeeUpdateDTO.Link)
+        {
+            employeeHistory.EndDateOfWorkInCurrentLink = DateOnly.FromDateTime(DateTime.UtcNow);
+
+            currentEmployee.DateOfStartInTheCurrentLink = DateOnly.FromDateTime(DateTime.UtcNow);
+            currentEmployee.Link = employeeUpdateDTO.Link;
+        }
 
         if (currentEmployee.PositionId != employeeUpdateDTO.PositionId)
         {
-            currentEmployee.PositionId = employeeUpdateDTO.PositionId;
-            currentEmployee.DateOfStartInTheCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
-
             employeeHistory.EndDateOfWorkInCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
-        }
 
-        if (currentEmployee.PositionId == _firedPositionId)
-        {
-            currentEmployee.Link = null;
-            currentEmployee.DateOfStartInTheCurrentLink = null;
+            currentEmployee.DateOfStartInTheCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
+            currentEmployee.PositionId = employeeUpdateDTO.PositionId;
+            currentEmployee.DateOfTermination = null;
 
-            employeeHistory.EndDateOfWorkInCurrentLink = DateOnly.FromDateTime(DateTime.UtcNow);
-
-            currentEmployee.Stock = null;
-            currentEmployee.DateOfStartInTheCurrentStock = null;
-
-            employeeHistory.EndDateOfWorkInCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
-
-            currentEmployee.Salary = 0;
-            currentEmployee.QuarterlyBonus = 0;
-            currentEmployee.PercentageOfSalaryInAdvance = 0;
-            currentEmployee.ForkliftControl = false;
-            currentEmployee.RolleyesControl = false;
-        }
-        else
-        {
-            if (currentEmployee.Link != employeeUpdateDTO.Link)
+            if (employeeUpdateDTO.PositionId == _firedPositionId)
             {
-                currentEmployee.Link = employeeUpdateDTO.Link;
-                currentEmployee.DateOfStartInTheCurrentLink = DateOnly.FromDateTime(DateTime.UtcNow);
-
-                employeeHistory.EndDateOfWorkInCurrentLink = DateOnly.FromDateTime(DateTime.UtcNow);
+                currentEmployee.DateOfTermination = employeeUpdateDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeUpdateDTO.DateOfTermination));
+                currentEmployee.DateOfStartInTheCurrentStock = null;
+                currentEmployee.Stock = null;
+                currentEmployee.DateOfStartInTheCurrentLink = null;
+                currentEmployee.Link = null;
             }
-
-            if (currentEmployee.Stock != employeeUpdateDTO.Stock)
-            {
-                currentEmployee.Stock = employeeUpdateDTO.Stock;
-                currentEmployee.DateOfStartInTheCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
-
-                employeeHistory.EndDateOfWorkInCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
-            }
-
-            currentEmployee.Salary = employeeUpdateDTO.Salary;
-            currentEmployee.QuarterlyBonus = employeeUpdateDTO.QuarterlyBonus;
-            currentEmployee.PercentageOfSalaryInAdvance = employeeUpdateDTO.PercentageOfSalaryInAdvance;
-            currentEmployee.ForkliftControl = employeeUpdateDTO.ForkliftControl;
-            currentEmployee.RolleyesControl = employeeUpdateDTO.RolleyesControl;
         }
 
         try

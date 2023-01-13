@@ -59,4 +59,37 @@ public partial class EmployeeHistory
     public virtual Employee? Employee { get; set; }
 
     public virtual Position? Position { get; set; }
+
+    public EmployeeHistory()
+    {
+
+    }
+
+    public EmployeeHistory(int employeeId, Employee currentEmployee)
+    {
+        EmployeeHistoryId = Guid.NewGuid();
+        EmployeeId = employeeId;
+        Name = currentEmployee.Name;
+        Surname = currentEmployee.Surname;
+        Patronymic = currentEmployee.Patronymic;
+        Birthday = currentEmployee.Birthday;
+        PassportNumber = currentEmployee.PassportNumber;
+        PassportIssuer = currentEmployee.PassportIssuer;
+        PassportIssueDate = currentEmployee.PassportIssueDate;
+        StartOfTotalSeniority = currentEmployee.StartOfTotalSeniority;
+        StartOfLuchSeniority = currentEmployee.StartOfLuchSeniority;
+        DateOfTermination = currentEmployee.DateOfTermination;
+        PositionId = currentEmployee.PositionId;
+        StartDateOfWorkInCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition;
+        Salary = currentEmployee.Salary;
+        QuarterlyBonus = currentEmployee.QuarterlyBonus;
+        PercentageOfSalaryInAdvance = currentEmployee.PercentageOfSalaryInAdvance;
+        Link = currentEmployee.Link;
+        StartDateOfWorkInCurrentLink = currentEmployee.DateOfStartInTheCurrentLink;
+        Stock = currentEmployee.Stock;
+        StartDateOfWorkIncurrentStock = currentEmployee.DateOfStartInTheCurrentStock;
+        ForkliftControl = currentEmployee.ForkliftControl;
+        RolleyesControl = currentEmployee.RolleyesControl;
+        DateOfCreation = DateTime.UtcNow;
+    }
 }

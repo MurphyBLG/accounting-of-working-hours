@@ -19,14 +19,7 @@ public class PositionController : Controller
     {
         try
         {
-            _context.Positions.Add(new Position
-            {
-                PositionId = Guid.NewGuid(),
-                Name = positionPostDTO.Name,
-                Salary = positionPostDTO.Salary,
-                QuarterlyBonus = positionPostDTO.QuarterlyBonus,
-                InterfaceAccesses = JsonSerializer.Serialize(positionPostDTO.InterfaceAccesses)
-            });
+            _context.Positions.Add(new Position(positionPostDTO)); // need to be tested
         }
         catch (Exception ex)
         {
@@ -54,14 +47,7 @@ public class PositionController : Controller
             return BadRequest("Такая должность не существует");
         }
 
-        return Ok(new PositionGetDTO
-        {
-            PositionId = position.PositionId,
-            Name = position.Name,
-            Salary = position.Salary,
-            QuarterlyBonus = position.QuarterlyBonus,
-            InterfaceAccesses = position.InterfaceAccesses
-        });
+        return Ok(new PositionGetDTO(position)); // need to be tested
     }
 
     [HttpGet]
