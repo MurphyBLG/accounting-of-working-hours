@@ -4,7 +4,7 @@ public partial class EmployeeHistory
 {
     public Guid? EmployeeHistoryId { get; set; }
 
-    public int EmployeeId { get; set; }
+    public Guid EmployeeId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -65,10 +65,10 @@ public partial class EmployeeHistory
 
     }
 
-    public EmployeeHistory(int employeeId, Employee currentEmployee)
+    public EmployeeHistory(string employeeId, Employee currentEmployee)
     {
         EmployeeHistoryId = Guid.NewGuid();
-        EmployeeId = employeeId;
+        EmployeeId = new Guid(employeeId);
         Name = currentEmployee.Name;
         Surname = currentEmployee.Surname;
         Patronymic = currentEmployee.Patronymic;

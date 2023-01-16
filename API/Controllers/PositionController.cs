@@ -19,7 +19,7 @@ public class PositionController : Controller
     {
         try
         {
-            _context.Positions.Add(new Position(positionPostDTO)); // need to be tested
+            _context.Positions.Add(new Position(positionPostDTO));
         }
         catch (Exception ex)
         {

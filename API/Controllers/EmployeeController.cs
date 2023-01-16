@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 [Authorize]
 public class EmployeeController : Controller
 {
-    private readonly Guid _firedPositionId = new("3d7e357d-ca7f-44c1-bbfb-a6250c5b7239");
+    private readonly Guid _firedPositionId = new("9ad29fb2-f9c4-4e4d-9155-12af0227ea67");
     private readonly AccountingOfWorkingHoursContext _context;
 
     public EmployeeController(AccountingOfWorkingHoursContext context)
@@ -37,10 +37,10 @@ public class EmployeeController : Controller
         return Ok();
     }
 
-    [HttpGet("{EmployeeId:int}")]
-    public async Task<IActionResult> GetEmployee(int employeeId)
+    [HttpGet("{EmployeeId}")]
+    public async Task<IActionResult> GetEmployee(string employeeId)
     {
-        Employee? currentEmployee = await _context.Employees.FindAsync(employeeId);
+        Employee? currentEmployee = await _context.Employees.FindAsync(new Guid(employeeId));
 
         if (currentEmployee == null)
         {
@@ -60,7 +60,7 @@ public class EmployeeController : Controller
         IEnumerable<EmployeeGetAllDTO>? result = from e in _context.Employees
                                                  select new EmployeeGetAllDTO
                                                  {
-                                                     Password = e.EmployeeId,
+                                                     EmployeeId = e.EmployeeId,
                                                      Name = e.Name,
                                                      Surname = e.Surname,
                                                      Patronymic = e.Patronymic
@@ -69,10 +69,10 @@ public class EmployeeController : Controller
         return Ok(result);
     }
 
-    [HttpPut("{EmployeeId:int}")]
-    public IActionResult UpdateEmployee(int employeeId, [FromBody] EmployeeUpdateDTO employeeUpdateDTO)
+    [HttpPut("{EmployeeId}")]
+    public IActionResult UpdateEmployee(string employeeId, [FromBody] EmployeeUpdateDTO employeeUpdateDTO)
     {
-        Employee? currentEmployee = _context.Employees.Find(employeeId);
+        Employee? currentEmployee = _context.Employees.Find(new Guid(employeeId));
 
         if (currentEmployee == null)
         {

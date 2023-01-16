@@ -2,7 +2,7 @@ using API.Models;
 
 public class EmployeeGetDTO
 {
-    public int Password { get; set; }
+    public Guid EmployeeId { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -51,7 +51,7 @@ public class EmployeeGetDTO
 
     public EmployeeGetDTO(Employee currentEmployee, PositionGetDTO currentEmployeePosition)
     {
-        Password = currentEmployee.EmployeeId;
+        EmployeeId = currentEmployee.EmployeeId;
         Name = currentEmployee.Name;
         Surname = currentEmployee.Surname;
         Patronymic = currentEmployee.Patronymic;

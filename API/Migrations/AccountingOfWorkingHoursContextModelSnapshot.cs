@@ -24,12 +24,10 @@ namespace API.Migrations
 
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
-                    b.Property<int>("EmployeeId")
+                    b.Property<Guid>("EmployeeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("employee_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("EmployeeId"));
 
                     b.Property<DateOnly>("Birthday")
                         .HasColumnType("date")
@@ -79,6 +77,9 @@ namespace API.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("passport_number");
+
+                    b.Property<int>("Password")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Patronymic")
                         .IsRequired()
@@ -154,8 +155,8 @@ namespace API.Migrations
                     b.Property<DateOnly?>("DateOfTermination")
                         .HasColumnType("date");
 
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid")
                         .HasColumnName("employee_id");
 
                     b.Property<DateOnly?>("EndDateOfWorkInCurrentLink")

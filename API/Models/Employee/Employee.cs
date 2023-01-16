@@ -2,7 +2,9 @@
 
 public partial class Employee
 {
-    public int EmployeeId { get; set; }
+    public Guid EmployeeId { get; set; }
+
+    public int Password { get; set; }
 
     public string Name { get; set; } = null!;
 
@@ -52,7 +54,8 @@ public partial class Employee
 
     public Employee(EmployeeRegistrationDTO employeeRegistrationDTO, Position employeePosition)
     {
-        EmployeeId = employeeRegistrationDTO.Password;
+        EmployeeId = Guid.NewGuid();
+        Password = employeeRegistrationDTO.Password;
         Name = employeeRegistrationDTO.Name;
         Surname = employeeRegistrationDTO.Surname;
         Patronymic = employeeRegistrationDTO.Patronymic;
@@ -69,12 +72,12 @@ public partial class Employee
         QuarterlyBonus = employeePosition.QuarterlyBonus;
         PercentageOfSalaryInAdvance = employeeRegistrationDTO.PercentageOfSalaryInAdvance;
         Link = employeeRegistrationDTO.Link;
-        DateOfStartInTheCurrentLink = (employeeRegistrationDTO.Link == null) ? null : DateOnly.FromDateTime(DateTime.UtcNow);
-                Stock = employeeRegistrationDTO.Stock;
+        DateOfStartInTheCurrentLink = (employeeRegistrationDTO.Link == null) ? null : DateOnly.FromDateTime(DateTime.UtcNow); // А если задали?
+        Stock = employeeRegistrationDTO.Stock;
         ForkliftControl = employeeRegistrationDTO.ForkliftControl;
         RolleyesControl = employeeRegistrationDTO.RolleyesControl;
         DateOfStartInTheCurrentPosition = DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentPosition);
-        DateOfStartInTheCurrentStock = DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentStock);
+        DateOfStartInTheCurrentStock = (employeeRegistrationDTO.DateOfStartInTheCurrentStock == null) ? null : DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentStock); // А если не задано?
     }
 
     public Employee()

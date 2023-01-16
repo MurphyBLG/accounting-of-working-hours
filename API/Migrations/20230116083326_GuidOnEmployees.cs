@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class workpls : Migration
+    public partial class GuidOnEmployees : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +30,8 @@ namespace API.Migrations
                 name: "employee",
                 columns: table => new
                 {
-                    employeeid = table.Column<int>(name: "employee_id", type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    employeeid = table.Column<Guid>(name: "employee_id", type: "uuid", nullable: false),
+                    Password = table.Column<int>(type: "integer", nullable: false),
                     name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     surname = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     patronymic = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
@@ -44,15 +43,16 @@ namespace API.Migrations
                     startofluchseniority = table.Column<DateOnly>(name: "start_of_luch_seniority", type: "date", nullable: false),
                     dateoftermination = table.Column<DateOnly>(name: "date_of_termination", type: "date", nullable: true),
                     positionid = table.Column<Guid>(name: "position_id", type: "uuid", nullable: true),
+                    dateofstartinthecurrentposition = table.Column<DateOnly>(name: "date_of_start_in_the_current_position", type: "date", nullable: true),
                     salary = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     quarterlybonus = table.Column<decimal>(name: "quarterly_bonus", type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
                     percentageofsalaryinadvance = table.Column<int>(name: "percentage_of_salary_in_advance", type: "integer", nullable: false),
                     link = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    DateOfStartInTheCurrentLink = table.Column<DateOnly>(type: "date", nullable: true),
                     stock = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    dateofstartinthecurrentstock = table.Column<DateOnly>(name: "date_of_start_in_the_current_stock", type: "date", nullable: true),
                     forkliftcontrol = table.Column<bool>(name: "forklift_control", type: "boolean", nullable: false),
-                    rolleyescontrol = table.Column<bool>(name: "rolleyes_control", type: "boolean", nullable: false),
-                    dateofstartinthecurrentposition = table.Column<DateOnly>(name: "date_of_start_in_the_current_position", type: "date", nullable: false),
-                    dateofstartinthecurrentstock = table.Column<DateOnly>(name: "date_of_start_in_the_current_stock", type: "date", nullable: false)
+                    rolleyescontrol = table.Column<bool>(name: "rolleyes_control", type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,14 +69,32 @@ namespace API.Migrations
                 columns: table => new
                 {
                     employeehistoryid = table.Column<Guid>(name: "employee_history_id", type: "uuid", nullable: false),
-                    employeeid = table.Column<int>(name: "employee_id", type: "integer", nullable: false),
+                    employeeid = table.Column<Guid>(name: "employee_id", type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Surname = table.Column<string>(type: "text", nullable: false),
+                    Patronymic = table.Column<string>(type: "text", nullable: false),
+                    Birthday = table.Column<DateOnly>(type: "date", nullable: false),
+                    PassportNumber = table.Column<string>(type: "text", nullable: false),
+                    PassportIssuer = table.Column<string>(type: "text", nullable: true),
+                    PassportIssueDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    StartOfTotalSeniority = table.Column<DateOnly>(type: "date", nullable: false),
+                    StartOfLuchSeniority = table.Column<DateOnly>(type: "date", nullable: false),
+                    DateOfTermination = table.Column<DateOnly>(type: "date", nullable: true),
                     positionid = table.Column<Guid>(name: "position_id", type: "uuid", nullable: true),
+                    startdateofworkincurrentposition = table.Column<DateOnly>(name: "start_date_of_work_in_current_position", type: "date", nullable: true),
+                    enddateofworkincurrentposition = table.Column<DateOnly>(name: "end_date_of_work_in_current_position", type: "date", nullable: true),
+                    Salary = table.Column<decimal>(type: "numeric", nullable: false),
+                    QuarterlyBonus = table.Column<decimal>(type: "numeric", nullable: false),
+                    PercentageOfSalaryInAdvance = table.Column<int>(type: "integer", nullable: false),
                     link = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    StartDateOfWorkInCurrentLink = table.Column<DateOnly>(type: "date", nullable: true),
+                    EndDateOfWorkInCurrentLink = table.Column<DateOnly>(type: "date", nullable: true),
                     stock = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    startdateofworkincurrentposition = table.Column<DateOnly>(name: "start_date_of_work_in_current_position", type: "date", nullable: false),
-                    enddateofworkincurrentposition = table.Column<DateOnly>(name: "end_date_of_work_in_current_position", type: "date", nullable: false),
-                    startdateofworkinstock = table.Column<DateOnly>(name: "start_date_of_work_in_stock", type: "date", nullable: false),
-                    enddateofworkinstock = table.Column<DateOnly>(name: "end_date_of_work_in_stock", type: "date", nullable: false)
+                    startdateofworkinstock = table.Column<DateOnly>(name: "start_date_of_work_in_stock", type: "date", nullable: true),
+                    enddateofworkinstock = table.Column<DateOnly>(name: "end_date_of_work_in_stock", type: "date", nullable: true),
+                    ForkliftControl = table.Column<bool>(type: "boolean", nullable: false),
+                    RolleyesControl = table.Column<bool>(type: "boolean", nullable: false),
+                    DateOfCreation = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -44,7 +44,8 @@ public class LogInController : Controller
     private Employee? AuthenticateEmployee(EmployeeLogInDTO employeeLogInDTO)
     {
         Employee? currentEmployee = _context.Employees
-            .Find(employeeLogInDTO.Password);
+            .Where(e => e.Password == employeeLogInDTO.Password)
+            .FirstOrDefault();
 
         if (currentEmployee == null)
         {
