@@ -6,6 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// builder.WebHost
+//     .UseKestrel()
+//     .UseContentRoot(Directory.GetCurrentDirectory())
+//     .UseUrls("http://*:5006")
+//     .UseIISIntegration();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
