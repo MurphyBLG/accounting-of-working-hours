@@ -2,6 +2,7 @@ using System.Text.Json;
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 [Route("[controller]")]
 [Authorize]
@@ -57,7 +58,10 @@ public class PositionController : Controller
                                                  select new PositionGetAllDTO
                                                  {
                                                      PositionId = p.PositionId,
-                                                     Name = p.Name
+                                                     Name = p.Name,
+                                                    //  Salary = p.Salary,
+                                                    //  QuarterlyBonus = p.QuarterlyBonus,
+                                                    //  InterfaceAccesses = JsonConvert.DeserializeObject<InterfaceAccesses>(p.InterfaceAccesses)!
                                                  };
 
         return Ok(result);

@@ -19,6 +19,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Allows to send http requests
+builder.Services.AddHttpClient();
+
 // Enable CORS
 builder.Services.AddCors(options =>
 {

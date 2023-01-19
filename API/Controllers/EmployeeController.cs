@@ -63,7 +63,9 @@ public class EmployeeController : Controller
                                                      EmployeeId = e.EmployeeId,
                                                      Name = e.Name,
                                                      Surname = e.Surname,
-                                                     Patronymic = e.Patronymic
+                                                     Patronymic = e.Patronymic,
+                                                    //  Stock = e.Stock,
+                                                    //  Link = e.Link,
                                                  };
 
         return Ok(result);

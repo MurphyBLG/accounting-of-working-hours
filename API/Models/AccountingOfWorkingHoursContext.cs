@@ -19,6 +19,8 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
     public virtual DbSet<Position> Positions { get; set; } = null!;
 
+    public virtual DbSet<Stock> Stocks { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>(entity =>
@@ -126,6 +128,21 @@ public partial class AccountingOfWorkingHoursContext : DbContext
             entity.Property(e => e.Salary)
                 .HasPrecision(10, 2)
                 .HasColumnName("salary");
+        });
+
+        modelBuilder.Entity<Stock>(entity => 
+        {
+            entity.HasKey(e => e.StockId).HasName("stock_id");
+
+            entity.ToTable("stock");
+
+            entity.Property(e => e.StockName)
+                .HasMaxLength(255)
+                .HasColumnName("name");
+
+            entity.Property(e => e.Links)
+                .HasColumnType("jsonb")
+                .HasColumnName("links");
         });
 
         OnModelCreatingPartial(modelBuilder);

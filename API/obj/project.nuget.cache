@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "4hmS2CxZUIjjEFhBVunjxWYBy1w9WF8/unK9i4035qamsK1rkjhGhqAdf/Dz/lx0nURvRZ45SjTYfC6iW9HE7A==",
+  "dgSpecHash": "SnBTrHi+TahkphRRgqv3FS2tjHBTwzxXhdWY25wHRTsAfoPOuz+Hd5vBiYyGtWExa35lI2sK5qP88dKgMLFBMQ==",
   "success": true,
   "projectFilePath": "/home/vitaliy/Documents/Accountig-of-working-hours/API/API.csproj",
   "expectedPackageFiles": [
@@ -32,6 +32,7 @@
     "/home/vitaliy/.nuget/packages/microsoft.identitymodel.tokens/6.15.1/microsoft.identitymodel.tokens.6.15.1.nupkg.sha512",
     "/home/vitaliy/.nuget/packages/microsoft.openapi/1.4.3/microsoft.openapi.1.4.3.nupkg.sha512",
     "/home/vitaliy/.nuget/packages/mono.texttemplating/2.2.1/mono.texttemplating.2.2.1.nupkg.sha512",
+    "/home/vitaliy/.nuget/packages/newtonsoft.json/13.0.2/newtonsoft.json.13.0.2.nupkg.sha512",
     "/home/vitaliy/.nuget/packages/npgsql/7.0.1/npgsql.7.0.1.nupkg.sha512",
     "/home/vitaliy/.nuget/packages/npgsql.entityframeworkcore.postgresql/7.0.1/npgsql.entityframeworkcore.postgresql.7.0.1.nupkg.sha512",
     "/home/vitaliy/.nuget/packages/swashbuckle.aspnetcore/6.4.0/swashbuckle.aspnetcore.6.4.0.nupkg.sha512",

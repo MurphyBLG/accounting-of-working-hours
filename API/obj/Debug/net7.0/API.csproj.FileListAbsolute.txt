@@ -91,13 +91,4 @@
 /home/vitaliy/Documents/Accountig-of-working-hours/API/obj/Debug/net7.0/API.csproj.CopyComplete
 /home/vitaliy/Documents/Accountig-of-working-hours/API/obj/Debug/net7.0/API.genruntimeconfig.cache
 /home/vitaliy/Documents/Accountig-of-working-hours/API/obj/Debug/net7.0/ref/API.dll
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/published/web.config
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/published/API.deps.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/published/API.runtimeconfig.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/published/appsettings.Development.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/published/appsettings.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Published/published/web.config
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Published/published/API.deps.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Published/published/API.runtimeconfig.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Published/published/appsettings.Development.json
-/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Published/published/appsettings.json
+/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Newtonsoft.Json.dll
