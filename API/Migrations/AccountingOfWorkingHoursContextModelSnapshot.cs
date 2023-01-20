@@ -117,10 +117,9 @@ namespace API.Migrations
                         .HasColumnType("date")
                         .HasColumnName("start_of_total_seniority");
 
-                    b.Property<string>("Stock")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("stock");
+                    b.Property<string>("Stocks")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("stocks");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -229,10 +228,9 @@ namespace API.Migrations
                     b.Property<DateOnly>("StartOfTotalSeniority")
                         .HasColumnType("date");
 
-                    b.Property<string>("Stock")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("stock");
+                    b.Property<string>("Stocks")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("stocks");
 
                     b.Property<string>("Surname")
                         .IsRequired()

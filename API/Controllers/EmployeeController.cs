@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
-[Authorize]
+//[Authorize]
 public class EmployeeController : Controller
 {
     private readonly Guid _firedPositionId = new("9ad29fb2-f9c4-4e4d-9155-12af0227ea67");

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(AccountingOfWorkingHoursContext))]
-    [Migration("20230119151235_CreatedStockTable")]
-    partial class CreatedStockTable
+    [Migration("20230120042457_stocksAreJsons")]
+    partial class stocksAreJsons
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -120,10 +120,9 @@ namespace API.Migrations
                         .HasColumnType("date")
                         .HasColumnName("start_of_total_seniority");
 
-                    b.Property<string>("Stock")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("stock");
+                    b.Property<string>("Stocks")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("stocks");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -232,10 +231,9 @@ namespace API.Migrations
                     b.Property<DateOnly>("StartOfTotalSeniority")
                         .HasColumnType("date");
 
-                    b.Property<string>("Stock")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("stock");
+                    b.Property<string>("Stocks")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("stocks");
 
                     b.Property<string>("Surname")
                         .IsRequired()

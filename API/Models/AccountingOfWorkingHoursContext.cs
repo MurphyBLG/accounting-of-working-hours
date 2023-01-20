@@ -92,7 +92,7 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasColumnName("link");
             entity.Property(e => e.Stocks)
                 .HasColumnType("jsonb")
-                .HasColumnName("stock");
+                .HasColumnName("stocks");
             entity.Property(e => e.StartDateOfWorkInCurrentPosition).HasColumnName("start_date_of_work_in_current_position");
             entity.Property(e => e.EndDateOfWorkInCurrentPosition).HasColumnName("end_date_of_work_in_current_position");
             entity.Property(e => e.StartDateOfWorkIncurrentStock).HasColumnName("start_date_of_work_in_stock");

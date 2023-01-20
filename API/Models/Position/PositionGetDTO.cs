@@ -1,4 +1,5 @@
 using API.Models;
+using Newtonsoft.Json;
 
 public class PositionGetDTO
 {
@@ -10,7 +11,7 @@ public class PositionGetDTO
 
     public decimal QuarterlyBonus { get; set; }
 
-    public string InterfaceAccesses { get; set; } = null!;
+    public InterfaceAccesses InterfaceAccesses { get; set; } = null!;
 
     public PositionGetDTO()
     {
@@ -23,7 +24,7 @@ public class PositionGetDTO
         Name = currentEmployee.Position!.Name;
         Salary = currentEmployee.Position!.Salary;
         QuarterlyBonus = currentEmployee.Position!.QuarterlyBonus;
-        InterfaceAccesses = currentEmployee.Position!.InterfaceAccesses;
+        InterfaceAccesses = JsonConvert.DeserializeObject<InterfaceAccesses>(currentEmployee.Position!.InterfaceAccesses)!;
     }
 
     public PositionGetDTO(Position position)
@@ -32,6 +33,6 @@ public class PositionGetDTO
         Name = position.Name;
         Salary = position.Salary;
         QuarterlyBonus = position.QuarterlyBonus;
-        InterfaceAccesses = position.InterfaceAccesses;
+        InterfaceAccesses = JsonConvert.DeserializeObject<InterfaceAccesses>(position.InterfaceAccesses)!;
     }
 }

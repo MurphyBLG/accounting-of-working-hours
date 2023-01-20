@@ -2,6 +2,7 @@ using System.Text.Json;
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 [Route("[controller]")]
 [Authorize]
@@ -36,8 +37,9 @@ public class LogInController : Controller
 
         return Ok(new InterfaceAccessesDTO
         {
-            Accesses = JsonSerializer.Deserialize<InterfaceAccesses>(currentEmployee.Position!.InterfaceAccesses)!,
-            Token = token
+            Accesses = System.Text.Json.JsonSerializer.Deserialize<InterfaceAccesses>(currentEmployee.Position!.InterfaceAccesses)!,
+            Token = token,
+            Stocks = JsonConvert.DeserializeObject<List<int>>(currentEmployee.Stocks!)!
         });
     }
 

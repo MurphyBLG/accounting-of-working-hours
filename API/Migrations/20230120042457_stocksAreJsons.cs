@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class GuidOnEmployees : Migration
+    public partial class stocksAreJsons : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +25,20 @@ namespace API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("position_pkey", x => x.positionid);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "stock",
+                columns: table => new
+                {
+                    StockId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    links = table.Column<string>(type: "jsonb", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("stock_id", x => x.StockId);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,7 +64,7 @@ namespace API.Migrations
                     percentageofsalaryinadvance = table.Column<int>(name: "percentage_of_salary_in_advance", type: "integer", nullable: false),
                     link = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     DateOfStartInTheCurrentLink = table.Column<DateOnly>(type: "date", nullable: true),
-                    stock = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    stocks = table.Column<string>(type: "jsonb", nullable: true),
                     dateofstartinthecurrentstock = table.Column<DateOnly>(name: "date_of_start_in_the_current_stock", type: "date", nullable: true),
                     forkliftcontrol = table.Column<bool>(name: "forklift_control", type: "boolean", nullable: false),
                     rolleyescontrol = table.Column<bool>(name: "rolleyes_control", type: "boolean", nullable: false)
@@ -89,7 +104,7 @@ namespace API.Migrations
                     link = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     StartDateOfWorkInCurrentLink = table.Column<DateOnly>(type: "date", nullable: true),
                     EndDateOfWorkInCurrentLink = table.Column<DateOnly>(type: "date", nullable: true),
-                    stock = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    stocks = table.Column<string>(type: "jsonb", nullable: true),
                     startdateofworkinstock = table.Column<DateOnly>(name: "start_date_of_work_in_stock", type: "date", nullable: true),
                     enddateofworkinstock = table.Column<DateOnly>(name: "end_date_of_work_in_stock", type: "date", nullable: true),
                     ForkliftControl = table.Column<bool>(type: "boolean", nullable: false),
@@ -145,6 +160,9 @@ namespace API.Migrations
         {
             migrationBuilder.DropTable(
                 name: "employee_history");
+
+            migrationBuilder.DropTable(
+                name: "stock");
 
             migrationBuilder.DropTable(
                 name: "employee");
