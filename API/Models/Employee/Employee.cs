@@ -40,7 +40,7 @@ public partial class Employee
 
     public DateOnly? DateOfStartInTheCurrentLink { get; set; }
 
-    public string? Stock { get; set; }
+    public string? Stocks { get; set; }
 
     public DateOnly? DateOfStartInTheCurrentStock { get; set; }
 
@@ -73,7 +73,7 @@ public partial class Employee
         PercentageOfSalaryInAdvance = employeeRegistrationDTO.PercentageOfSalaryInAdvance;
         Link = employeeRegistrationDTO.Link;
         DateOfStartInTheCurrentLink = (employeeRegistrationDTO.Link == null) ? null : DateOnly.FromDateTime(DateTime.UtcNow); // А если задали?
-        Stock = employeeRegistrationDTO.Stock;
+        Stocks = employeeRegistrationDTO.Stock;
         ForkliftControl = employeeRegistrationDTO.ForkliftControl;
         RolleyesControl = employeeRegistrationDTO.RolleyesControl;
         DateOfStartInTheCurrentPosition = DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentPosition);

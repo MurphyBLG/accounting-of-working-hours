@@ -26,7 +26,7 @@ public class EmployeeUpdateDTO
 
     public string? Link { get; set; }
 
-    public string? Stock { get; set; }
+    public string? Stocks { get; set; }
 
     public bool ForkliftControl { get; set; }
 

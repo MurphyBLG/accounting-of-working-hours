@@ -16,6 +16,7 @@ public class StockController : Controller
         this._httpClientFactory = httpClientFactory;
     }
 
+    // Нужно оптимизировать
     [HttpPost]
     public async Task<IActionResult> UpdateStocks()
     {
@@ -30,7 +31,7 @@ public class StockController : Controller
             return BadRequest("Не возможно получить список складов!");
         }
 
-        List<Task> tasks = new();
+        List<Stock> stocksToAdd = new();
         foreach (StockFromAPI stockFromAPI in stocks)
         {
             Stock? stock = await _context.Stocks.FindAsync(stockFromAPI.Id);
@@ -41,7 +42,7 @@ public class StockController : Controller
                 {
                     StockId = stockFromAPI.Id,
                     StockName = stockFromAPI.FullTitle,
-                    Links = "{\"links\": []}"
+                    Links = "[]"
                 });
 
                 continue;
@@ -50,6 +51,39 @@ public class StockController : Controller
             stock.StockName = stockFromAPI.FullTitle;
         }
 
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    [HttpPost("{stockId}")]
+    public async Task<IActionResult> AddLinkToStock(int stockId, [FromBody] LinkAddDTO linkAddDTO)
+    {
+        Stock? currentStock = await _context.Stocks.FindAsync(stockId);
+
+        if (currentStock is null)
+        {
+            return BadRequest("Склад не найден!");
+        }
+
+        SortedSet<string>? links = JsonConvert.DeserializeObject<SortedSet<string>>(currentStock.Links);
+
+        if (links is null)
+        {
+            return BadRequest("У данного склада нет списка звеньев! / Ошибка десериализации");
+        }
+
+        if (links.Contains(linkAddDTO.Name))
+        {
+            return BadRequest("Это звено уже существует!");
+        }
+
+        links.Add(linkAddDTO.Name);
+
+        string json = JsonConvert.SerializeObject(links);
+
+        currentStock.Links = json;
 
         await _context.SaveChangesAsync();
 

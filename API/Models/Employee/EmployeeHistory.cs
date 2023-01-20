@@ -44,7 +44,7 @@ public partial class EmployeeHistory
 
     public DateOnly? EndDateOfWorkInCurrentLink { get; set; }
 
-    public string? Stock { get; set; }
+    public string? Stocks { get; set; }
 
     public DateOnly? StartDateOfWorkIncurrentStock { get; set; }
 
@@ -86,7 +86,7 @@ public partial class EmployeeHistory
         PercentageOfSalaryInAdvance = currentEmployee.PercentageOfSalaryInAdvance;
         Link = currentEmployee.Link;
         StartDateOfWorkInCurrentLink = currentEmployee.DateOfStartInTheCurrentLink;
-        Stock = currentEmployee.Stock;
+        Stocks = currentEmployee.Stocks;
         StartDateOfWorkIncurrentStock = currentEmployee.DateOfStartInTheCurrentStock;
         ForkliftControl = currentEmployee.ForkliftControl;
         RolleyesControl = currentEmployee.RolleyesControl;

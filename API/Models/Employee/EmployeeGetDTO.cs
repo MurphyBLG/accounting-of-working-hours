@@ -28,7 +28,7 @@ public class EmployeeGetDTO
 
     public string? Link { get; set; }
 
-    public string? Stock { get; set; }
+    public string? Stocks { get; set; }
 
     public bool ForkliftControl { get; set; }
 
@@ -64,7 +64,7 @@ public class EmployeeGetDTO
         DateOfTermination = currentEmployee.DateOfTermination.ToString();
         Position = currentEmployeePosition;
         Link = currentEmployee.Link;
-        Stock = currentEmployee.Stock;
+        Stocks = currentEmployee.Stocks;
         ForkliftControl = currentEmployee.ForkliftControl;
         RolleyesControl = currentEmployee.RolleyesControl;
         Salary = currentEmployee.Salary;

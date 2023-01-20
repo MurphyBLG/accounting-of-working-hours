@@ -93,12 +93,12 @@ public class EmployeeController : Controller
         currentEmployee.StartOfTotalSeniority = DateOnly.Parse(employeeUpdateDTO.StartOfTotalSeniority);
         currentEmployee.StartOfLuchSeniority = DateOnly.Parse(employeeUpdateDTO.StartOfLuchSeniority);
 
-        if (currentEmployee.Stock != employeeUpdateDTO.Stock)
+        if (currentEmployee.Stocks != employeeUpdateDTO.Stocks)
         {
             employeeHistory.EndDateOfWorkInCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
 
             currentEmployee.DateOfStartInTheCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
-            currentEmployee.Stock = employeeUpdateDTO.Stock;
+            currentEmployee.Stocks = employeeUpdateDTO.Stocks;
         }
 
         if (currentEmployee.Link != employeeUpdateDTO.Link)
@@ -121,7 +121,7 @@ public class EmployeeController : Controller
             {
                 currentEmployee.DateOfTermination = employeeUpdateDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeUpdateDTO.DateOfTermination));
                 currentEmployee.DateOfStartInTheCurrentStock = null;
-                currentEmployee.Stock = null;
+                currentEmployee.Stocks = null;
                 currentEmployee.DateOfStartInTheCurrentLink = null;
                 currentEmployee.Link = null;
             }

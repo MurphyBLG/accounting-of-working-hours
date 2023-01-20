@@ -69,9 +69,9 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("salary");
             entity.Property(e => e.RolleyesControl).HasColumnName("rolleyes_control");
-            entity.Property(e => e.Stock)
-                .HasMaxLength(255)
-                .HasColumnName("stock");
+            entity.Property(e => e.Stocks)
+                .HasColumnType("jsonb")
+                .HasColumnName("stocks");
 
             entity.HasOne(d => d.Position).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.PositionId)
@@ -90,8 +90,8 @@ public partial class AccountingOfWorkingHoursContext : DbContext
             entity.Property(e => e.Link)
                 .HasMaxLength(255)
                 .HasColumnName("link");
-            entity.Property(e => e.Stock)
-                .HasMaxLength(255)
+            entity.Property(e => e.Stocks)
+                .HasColumnType("jsonb")
                 .HasColumnName("stock");
             entity.Property(e => e.StartDateOfWorkInCurrentPosition).HasColumnName("start_date_of_work_in_current_position");
             entity.Property(e => e.EndDateOfWorkInCurrentPosition).HasColumnName("end_date_of_work_in_current_position");
