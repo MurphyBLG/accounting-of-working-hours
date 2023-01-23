@@ -8,10 +8,12 @@ public class EmployeeController : Controller
 {
     private readonly Guid _firedPositionId = new("9ad29fb2-f9c4-4e4d-9155-12af0227ea67");
     private readonly AccountingOfWorkingHoursContext _context;
+    private readonly IDictionarizatorService _dictionarizator;
 
-    public EmployeeController(AccountingOfWorkingHoursContext context)
+    public EmployeeController(AccountingOfWorkingHoursContext context, IDictionarizatorService dictionarizator)
     {
         this._context = context;
+        this._dictionarizator = dictionarizator;
     }
 
     [HttpPost]
@@ -51,22 +53,25 @@ public class EmployeeController : Controller
 
         PositionGetDTO currentEmployeePosition = new(currentEmployee);
 
-        return Ok(new EmployeeGetDTO(currentEmployee, currentEmployeePosition));
+        return Ok(new EmployeeGetDTO(currentEmployee,
+            currentEmployeePosition,
+            _dictionarizator.DictionarizeStocks(currentEmployee, _context)));
     }
 
     [HttpGet]
     public IActionResult GetAllEmployees()
     {
-        IEnumerable<EmployeeGetAllDTO>? result = from e in _context.Employees
-                                                 select new EmployeeGetAllDTO
-                                                 {
-                                                     EmployeeId = e.EmployeeId,
-                                                     Name = e.Name,
-                                                     Surname = e.Surname,
-                                                     Patronymic = e.Patronymic,
-                                                    //  Stock = e.Stock,
-                                                    //  Link = e.Link,
-                                                 };
+        List<Employee>? employees = _context.Employees.ToList();
+
+        IEnumerable<EmployeeGetAllDTO> result = employees.Select(e => new EmployeeGetAllDTO
+        {
+            EmployeeId = e.EmployeeId,
+            Name = e.Name,
+            Surname = e.Surname,
+            Patronymic = e.Patronymic,
+            Stocks = _dictionarizator.DictionarizeStocks(e, _context),
+            Link = e.Link,
+        });
 
         return Ok(result);
     }
@@ -116,15 +121,6 @@ public class EmployeeController : Controller
             currentEmployee.DateOfStartInTheCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
             currentEmployee.PositionId = employeeUpdateDTO.PositionId;
             currentEmployee.DateOfTermination = null;
-
-            if (employeeUpdateDTO.PositionId == _firedPositionId)
-            {
-                currentEmployee.DateOfTermination = employeeUpdateDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeUpdateDTO.DateOfTermination));
-                currentEmployee.DateOfStartInTheCurrentStock = null;
-                currentEmployee.Stocks = null;
-                currentEmployee.DateOfStartInTheCurrentLink = null;
-                currentEmployee.Link = null;
-            }
         }
 
         try
@@ -132,6 +128,46 @@ public class EmployeeController : Controller
             _context.EmployeeHistories.Add(employeeHistory);
 
             _context.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+        return Ok();
+    }
+
+    [HttpDelete("{EmployeeId}")]
+    public async Task<IActionResult> FireEmployee(string employeeId, [FromBody] EmployeeFireDTO employeeFireDTO)
+    {
+        Employee? currentEmployee = await _context.Employees.FindAsync(new Guid(employeeId));
+
+        if (currentEmployee == null)
+        {
+            return BadRequest("Сотрудник не найден");
+        }
+
+        EmployeeHistory employeeHistory = new(employeeId, currentEmployee);
+
+        employeeHistory.EndDateOfWorkInCurrentStock = DateOnly.FromDateTime(DateTime.UtcNow);
+        employeeHistory.EndDateOfWorkInCurrentLink = DateOnly.FromDateTime(DateTime.UtcNow);
+        employeeHistory.EndDateOfWorkInCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        currentEmployee.DateOfStartInTheCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
+        currentEmployee.PositionId = _firedPositionId;
+        currentEmployee.DateOfTermination = employeeFireDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeFireDTO.DateOfTermination));
+        currentEmployee.DateOfStartInTheCurrentStock = null;
+        currentEmployee.Stocks = null;
+        currentEmployee.DateOfStartInTheCurrentLink = null;
+        currentEmployee.Link = null;
+        currentEmployee.ForkliftControl = false;
+        currentEmployee.RolleyesControl = false;
+
+        try
+        {
+            await _context.EmployeeHistories.AddAsync(employeeHistory);
+
+            await _context.SaveChangesAsync();
         }
         catch (Exception ex)
         {

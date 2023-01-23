@@ -28,7 +28,7 @@ public class EmployeeGetDTO
 
     public string? Link { get; set; }
 
-    public string? Stocks { get; set; }
+    public Dictionary<string, int>? Stocks { get; set; }
 
     public bool ForkliftControl { get; set; }
 
@@ -49,7 +49,7 @@ public class EmployeeGetDTO
 
     }
 
-    public EmployeeGetDTO(Employee currentEmployee, PositionGetDTO currentEmployeePosition)
+    public EmployeeGetDTO(Employee currentEmployee, PositionGetDTO currentEmployeePosition, Dictionary<string, int> stocks)
     {
         EmployeeId = currentEmployee.EmployeeId;
         Name = currentEmployee.Name;
@@ -64,7 +64,7 @@ public class EmployeeGetDTO
         DateOfTermination = currentEmployee.DateOfTermination.ToString();
         Position = currentEmployeePosition;
         Link = currentEmployee.Link;
-        Stocks = currentEmployee.Stocks;
+        Stocks = stocks;
         ForkliftControl = currentEmployee.ForkliftControl;
         RolleyesControl = currentEmployee.RolleyesControl;
         Salary = currentEmployee.Salary;

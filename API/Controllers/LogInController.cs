@@ -11,12 +11,14 @@ public class LogInController : Controller
     private readonly AccountingOfWorkingHoursContext _context;
     private readonly IConfiguration _config;
     private readonly ITokenService _tokenService;
+    private readonly IDictionarizatorService _dictionarizator;
 
-    public LogInController(AccountingOfWorkingHoursContext context, IConfiguration config, ITokenService tokenService)
+    public LogInController(AccountingOfWorkingHoursContext context, IConfiguration config, ITokenService tokenService, IDictionarizatorService dictionarizator)
     {
         this._context = context;
         this._config = config;
         this._tokenService = tokenService;
+        this._dictionarizator = dictionarizator;
     }
 
     [AllowAnonymous]
@@ -35,11 +37,13 @@ public class LogInController : Controller
             _config["Jwt:Issuer"]!,
             _config["Jwt:Audience"]!);
 
+        Dictionary <string, int> stocksWithNames = _dictionarizator.DictionarizeStocks(currentEmployee, _context);
+
         return Ok(new InterfaceAccessesDTO
         {
             Accesses = System.Text.Json.JsonSerializer.Deserialize<InterfaceAccesses>(currentEmployee.Position!.InterfaceAccesses)!,
             Token = token,
-            Stocks = JsonConvert.DeserializeObject<List<int>>(currentEmployee.Stocks!)!
+            Stocks = stocksWithNames
         });
     }
 
