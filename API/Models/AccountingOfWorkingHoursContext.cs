@@ -21,6 +21,14 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
     public virtual DbSet<Stock> Stocks { get; set; } = null!;
 
+    public virtual DbSet<Shift> Shifts { get; set; } = null!;
+
+    public virtual DbSet<ShiftInfo> ShiftInfos { get; set; } = null!;
+
+    public virtual DbSet<ShiftHistory> ShiftHistories { get; set; } = null!;
+
+    public virtual DbSet<Mark> Marks { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>(entity =>
@@ -53,7 +61,7 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
             entity.Property(e => e.StartOfLuchSeniority).HasColumnName("start_of_luch_seniority");
             entity.Property(e => e.StartOfTotalSeniority).HasColumnName("start_of_total_seniority");
-            
+
             entity.Property(e => e.DateOfStartInTheCurrentPosition).HasColumnName("date_of_start_in_the_current_position");
             entity.Property(e => e.DateOfStartInTheCurrentStock).HasColumnName("date_of_start_in_the_current_stock");
             entity.Property(e => e.ForkliftControl).HasColumnName("forklift_control");
@@ -130,7 +138,7 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasColumnName("salary");
         });
 
-        modelBuilder.Entity<Stock>(entity => 
+        modelBuilder.Entity<Stock>(entity =>
         {
             entity.HasKey(e => e.StockId).HasName("stock_id");
 
@@ -143,6 +151,151 @@ public partial class AccountingOfWorkingHoursContext : DbContext
             entity.Property(e => e.Links)
                 .HasColumnType("jsonb")
                 .HasColumnName("links");
+        });
+
+        modelBuilder.Entity<Shift>(entity =>
+        {
+            entity.HasKey(e => e.ShiftId).HasName("shift_id");
+
+            entity.ToTable("shifts");
+
+            entity.Property(e => e.ShiftId)
+                .HasColumnName("shift_id");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("stock_id");
+
+            entity.Property(e => e.EmployeeWhoPostedTheShiftId)
+                .HasColumnName("employee_who_posted_the_shift_id");
+
+            entity.Property(e => e.DayOrNight)
+                .HasMaxLength(255)
+                .HasColumnName("day_or_night");
+
+            entity.Property(e => e.OpeningDateAndTime)
+                .IsRequired(false)
+                .HasColumnName("opening_date_and_time");
+
+            entity.Property(e => e.Employees)
+                .HasColumnType("jsonb")
+                .HasColumnName("employees");
+
+            entity.Property(e => e.ClosingDateAndTime)
+                .IsRequired(false)
+                .HasColumnName("closing_date_and_time");
+
+            entity.HasOne(d => d.Stock).WithMany(p => p.Shifts)
+                .HasForeignKey(d => d.StockId)
+                .HasConstraintName("shift_stock_id_fkey");
+
+            entity.HasOne(d => d.EmployeeWhoPostedTheShift).WithMany(p => p.Shifts)
+                .HasForeignKey(d => d.EmployeeWhoPostedTheShiftId)
+                .HasConstraintName("shift_employee_who_posted_the_shift_id_fkey");
+        });
+
+        modelBuilder.Entity<ShiftInfo>(entity =>
+        {
+            entity.HasKey(e => e.ShiftInfoId);
+
+            entity.ToTable("shift_infos");
+
+            entity.Property(e => e.ShiftInfoId)
+                .HasColumnName("shift_info_id");
+
+            entity.Property(e => e.ShiftHistoryId)
+                .HasColumnName("shift_history_id");
+
+            entity.Property(e => e.EmployeeId)
+                .HasColumnName("employee_id");
+
+            entity.Property(e => e.DateAndTimeOfArrival)
+                .HasColumnName("date_and_time_of_arrival");
+
+            entity.Property(e => e.NumberOfHoursWorked)
+                .HasColumnName("number_of_hours_worked");
+
+            entity.Property(e => e.Penalty)
+                .HasColumnName("penalty")
+                .IsRequired(false);
+
+            entity.Property(e => e.PenaltyComment)
+                .HasMaxLength(255)
+                .HasColumnName("penalty_comment")
+                .IsRequired(false);
+
+            entity.Property(e => e.Send)
+                .HasColumnName("send")
+                .IsRequired(false);
+
+            entity.Property(e => e.SendComment)
+                .HasMaxLength(255)
+                .HasColumnName("send_comment")
+                .IsRequired(false);
+
+            entity.HasIndex(e => new { e.DateAndTimeOfArrival, e.EmployeeId });
+
+            entity.HasOne(d => d.ShiftHistory).WithMany(p => p.ShiftInfos)
+                .HasForeignKey(d => d.ShiftHistoryId)
+                .HasConstraintName("shift_info_shift_history_id_fkey");
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.ShiftInfos)
+                .HasForeignKey(d => d.EmployeeId)
+                .HasConstraintName("shift_info_employee_id_fkey");
+        });
+
+        modelBuilder.Entity<ShiftHistory>(entity =>
+        {
+            entity.HasKey(e => e.ShiftHistoryId).HasName("shift_history_id");
+
+            entity.ToTable("shift_history");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("stock_id");
+
+            entity.Property(e => e.EmployeeWhoPostedTheShiftId)
+                .HasColumnName("employee_who_posted_the_shift_id");
+
+            entity.Property(e => e.DayOrNight)
+                .HasMaxLength(255)
+                .HasColumnName("day_or_night");
+
+            entity.Property(e => e.OpeningDateAndTime)
+                .HasColumnName("opening_date_and_time");
+
+            entity.Property(e => e.Employees)
+                .HasColumnType("jsonb")
+                .HasColumnName("employees");
+
+            entity.Property(e => e.ClosingDateAndTime)
+                .HasColumnName("closing_date_and_time");
+
+            entity.HasOne(d => d.Stock).WithMany(p => p.ShiftHistories)
+                .HasForeignKey(d => d.StockId);
+
+            entity.HasOne(d => d.EmployeeWhoPostedTheShift).WithMany(p => p.ShiftHistories)
+                .HasForeignKey(d => d.EmployeeWhoPostedTheShiftId);
+        });
+
+        modelBuilder.Entity<Mark>(entity => 
+        {
+            entity.HasKey(e => e.MarkId).HasName("mark_id");
+
+            entity.ToTable("marks");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("stock_id");
+
+            entity.Property(e => e.EmployeeId)
+                .HasColumnName("employee_id");
+
+            entity.Property(e => e.MarkDate)
+                .HasColumnName("mark_date");
+
+            entity.HasOne(d => d.Stock).WithMany(p => p.Marks)
+                .HasForeignKey(d => d.StockId);
+
+            entity.HasOne(d => d.Employee).WithMany(p => p.Marks)
+                .HasForeignKey(d => d.EmployeeId);
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -25,4 +25,23 @@ public class TokenService : ITokenService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    public Employee? GetCurrentEmployee(ClaimsPrincipal User, AccountingOfWorkingHoursContext context)
+    {
+        if (User.FindFirstValue("EmployeeId") is null)
+        {
+            return null;
+        }
+
+        Guid employeeId = new Guid(User.FindFirstValue("EmployeeId")!);
+
+        Employee? currentEmployee = context.Employees.Find(employeeId);
+
+        if (currentEmployee is null)
+        {
+            return null;
+        }
+
+        return currentEmployee;
+    }
 }

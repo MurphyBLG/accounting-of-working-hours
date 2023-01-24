@@ -6,6 +6,8 @@ public class EmployeeGetDTO
 
     public string Name { get; set; } = null!;
 
+    public int Password { get; set; }
+
     public string Surname { get; set; } = null!;
 
     public string Patronymic { get; set; } = null!;
@@ -28,7 +30,7 @@ public class EmployeeGetDTO
 
     public string? Link { get; set; }
 
-    public Dictionary<string, int>? Stocks { get; set; }
+    public List<StockDTO>? Stocks { get; set; }
 
     public bool ForkliftControl { get; set; }
 
@@ -49,8 +51,9 @@ public class EmployeeGetDTO
 
     }
 
-    public EmployeeGetDTO(Employee currentEmployee, PositionGetDTO currentEmployeePosition, Dictionary<string, int> stocks)
+    public EmployeeGetDTO(Employee currentEmployee, PositionGetDTO currentEmployeePosition, List<StockDTO> stocks)
     {
+        Password = currentEmployee.Password;
         EmployeeId = currentEmployee.EmployeeId;
         Name = currentEmployee.Name;
         Surname = currentEmployee.Surname;

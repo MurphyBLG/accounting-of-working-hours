@@ -8,12 +8,12 @@ public class EmployeeController : Controller
 {
     private readonly Guid _firedPositionId = new("9ad29fb2-f9c4-4e4d-9155-12af0227ea67");
     private readonly AccountingOfWorkingHoursContext _context;
-    private readonly IDictionarizatorService _dictionarizator;
+    private readonly IIdstoIdsPlusDataService _idstoIdsPlusDataService;
 
-    public EmployeeController(AccountingOfWorkingHoursContext context, IDictionarizatorService dictionarizator)
+    public EmployeeController(AccountingOfWorkingHoursContext context, IIdstoIdsPlusDataService idstoIdsPlusDataService)
     {
         this._context = context;
-        this._dictionarizator = dictionarizator;
+        this._idstoIdsPlusDataService = idstoIdsPlusDataService;
     }
 
     [HttpPost]
@@ -55,7 +55,7 @@ public class EmployeeController : Controller
 
         return Ok(new EmployeeGetDTO(currentEmployee,
             currentEmployeePosition,
-            _dictionarizator.DictionarizeStocks(currentEmployee, _context)));
+            _idstoIdsPlusDataService.StocksToList(currentEmployee, _context)));
     }
 
     [HttpGet]
@@ -69,7 +69,7 @@ public class EmployeeController : Controller
             Name = e.Name,
             Surname = e.Surname,
             Patronymic = e.Patronymic,
-            Stocks = _dictionarizator.DictionarizeStocks(e, _context),
+            Stocks = _idstoIdsPlusDataService.StocksToList(e, _context),
             Link = e.Link,
         });
 
@@ -89,6 +89,7 @@ public class EmployeeController : Controller
         EmployeeHistory employeeHistory = new(employeeId, currentEmployee);
 
         currentEmployee.Name = employeeUpdateDTO.Name;
+        currentEmployee.Password = employeeUpdateDTO.Password;
         currentEmployee.Surname = employeeUpdateDTO.Surname;
         currentEmployee.Patronymic = employeeUpdateDTO.Patronymic;
         currentEmployee.Birthday = DateOnly.Parse(employeeUpdateDTO.Birthday);
@@ -157,7 +158,7 @@ public class EmployeeController : Controller
         currentEmployee.PositionId = _firedPositionId;
         currentEmployee.DateOfTermination = employeeFireDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeFireDTO.DateOfTermination));
         currentEmployee.DateOfStartInTheCurrentStock = null;
-        currentEmployee.Stocks = null;
+        currentEmployee.Stocks = "[]";
         currentEmployee.DateOfStartInTheCurrentLink = null;
         currentEmployee.Link = null;
         currentEmployee.ForkliftControl = false;

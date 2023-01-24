@@ -8,7 +8,7 @@ public class EmployeeGetAllDTO
 
     public string Patronymic { get; set; } = null!;
 
-    public Dictionary<string, int>? Stocks { get; set; }
+    public List<StockDTO>? Stocks { get; set; }
 
     public string? Link { get; set; }
 }

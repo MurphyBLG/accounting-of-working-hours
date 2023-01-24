@@ -6,6 +6,8 @@ public class EmployeeUpdateDTO
 
     public string Surname { get; set; } = null!;
 
+    public int Password { get; set; }
+
     public string Patronymic { get; set; } = null!;
 
     public string Birthday { get; set; } = null!;

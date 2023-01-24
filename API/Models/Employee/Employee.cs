@@ -50,6 +50,14 @@ public partial class Employee
 
     public virtual ICollection<EmployeeHistory> EmployeeHistories { get; } = new List<EmployeeHistory>();
 
+    public virtual ICollection<Shift> Shifts { get; } = new List<Shift>();
+
+    public virtual ICollection<Mark> Marks { get; } = new List<Mark>();
+
+    public virtual ICollection<ShiftInfo> ShiftInfos { get; } = new List<ShiftInfo>();
+    
+    public virtual ICollection<ShiftHistory> ShiftHistories { get; } = new List<ShiftHistory>();
+
     public virtual Position? Position { get; set; }
 
     public Employee(EmployeeRegistrationDTO employeeRegistrationDTO, Position employeePosition)

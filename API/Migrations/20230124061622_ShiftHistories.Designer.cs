@@ -3,6 +3,7 @@ using System;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(AccountingOfWorkingHoursContext))]
-    partial class AccountingOfWorkingHoursContextModelSnapshot : ModelSnapshot
+    [Migration("20230124061622_ShiftHistories")]
+    partial class ShiftHistories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,34 +286,6 @@ namespace API.Migrations
                     b.ToTable("position", (string)null);
                 });
 
-            modelBuilder.Entity("Mark", b =>
-                {
-                    b.Property<Guid>("MarkId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("EmployeeId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("employee_id");
-
-                    b.Property<DateTime>("MarkDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("mark_date");
-
-                    b.Property<int>("StockId")
-                        .HasColumnType("integer")
-                        .HasColumnName("stock_id");
-
-                    b.HasKey("MarkId")
-                        .HasName("mark_id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("StockId");
-
-                    b.ToTable("marks", (string)null);
-                });
-
             modelBuilder.Entity("Shift", b =>
                 {
                     b.Property<Guid>("ShiftId")
@@ -384,6 +359,10 @@ namespace API.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("opening_date_and_time");
 
+                    b.Property<Guid>("ShiftId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_id");
+
                     b.Property<int>("StockId")
                         .HasColumnType("integer")
                         .HasColumnName("stock_id");
@@ -435,7 +414,7 @@ namespace API.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("send_comment");
 
-                    b.Property<Guid?>("ShiftHistoryId")
+                    b.Property<Guid>("ShiftHistoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("shift_history_id");
 
@@ -504,25 +483,6 @@ namespace API.Migrations
                     b.Navigation("Position");
                 });
 
-            modelBuilder.Entity("Mark", b =>
-                {
-                    b.HasOne("API.Models.Employee", "Employee")
-                        .WithMany("Marks")
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Stock", "Stock")
-                        .WithMany("Marks")
-                        .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("Stock");
-                });
-
             modelBuilder.Entity("Shift", b =>
                 {
                     b.HasOne("API.Models.Employee", "EmployeeWhoPostedTheShift")
@@ -575,6 +535,8 @@ namespace API.Migrations
                     b.HasOne("ShiftHistory", "ShiftHistory")
                         .WithMany("ShiftInfos")
                         .HasForeignKey("ShiftHistoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("shift_info_shift_history_id_fkey");
 
                     b.Navigation("Employee");
@@ -585,8 +547,6 @@ namespace API.Migrations
             modelBuilder.Entity("API.Models.Employee", b =>
                 {
                     b.Navigation("EmployeeHistories");
-
-                    b.Navigation("Marks");
 
                     b.Navigation("ShiftHistories");
 
@@ -609,8 +569,6 @@ namespace API.Migrations
 
             modelBuilder.Entity("Stock", b =>
                 {
-                    b.Navigation("Marks");
-
                     b.Navigation("ShiftHistories");
 
                     b.Navigation("Shifts");

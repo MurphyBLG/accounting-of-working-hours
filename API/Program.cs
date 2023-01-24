@@ -59,8 +59,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 // Token Services
 builder.Services.AddTransient<ITokenService, TokenService>();
-// Dictionarizator Services
-builder.Services.AddTransient<IDictionarizatorService, Dictionarizator>();
+builder.Services.AddTransient<IIdstoIdsPlusDataService, IdstoIdsPlusData>();
 
 var app = builder.Build();
 

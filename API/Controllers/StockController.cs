@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 [Route("[controller]")]
-[Authorize]
+//[Authorize]
 public class StockController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;
@@ -88,5 +88,20 @@ public class StockController : Controller
         await _context.SaveChangesAsync();
 
         return Ok();
+    }
+
+    [HttpGet("{stockId}")]
+    public async Task<IActionResult> GetLinks(int stockId)
+    {
+        Stock? stock = await _context.Stocks.FindAsync(stockId);
+
+        if (stock is null)
+        {
+            return NotFound($"Склад {stockId} не найден");
+        }
+
+        List<string> links = JsonConvert.DeserializeObject<List<string>>(stock.Links!)!; 
+
+        return Ok(links);
     }
 }

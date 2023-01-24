@@ -4,5 +4,5 @@ public class InterfaceAccessesDTO
 
     public string Token { get; set; } = null!;
 
-    public Dictionary<string, int> Stocks { get; set; } = null!;
+    public List<StockDTO> Stocks { get; set; } = null!;
 }
