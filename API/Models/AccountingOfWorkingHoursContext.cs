@@ -211,6 +211,10 @@ public partial class AccountingOfWorkingHoursContext : DbContext
             entity.Property(e => e.DateAndTimeOfArrival)
                 .HasColumnName("date_and_time_of_arrival");
 
+            entity.Property(e => e.DayOrNight)
+                .HasMaxLength(255)
+                .HasColumnName("day_or_night");
+
             entity.Property(e => e.NumberOfHoursWorked)
                 .HasColumnName("number_of_hours_worked");
 

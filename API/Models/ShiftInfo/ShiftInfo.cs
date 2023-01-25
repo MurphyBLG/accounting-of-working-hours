@@ -10,6 +10,8 @@ public class ShiftInfo
 
     public DateTime DateAndTimeOfArrival { get; set; }
 
+    public string DayOrNight { get; set; } = null!;
+
     public int NumberOfHoursWorked { get; set; }
 
     public decimal? Penalty { get; set; }

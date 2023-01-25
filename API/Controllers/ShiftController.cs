@@ -82,6 +82,7 @@ public class ShiftController : Controller
                 ShiftHistoryId = shiftHistoryToAdd.ShiftHistoryId,
                 EmployeeId = new Guid($"{kv.Key}"),
                 DateAndTimeOfArrival = employeeMark.MarkDate,
+                DayOrNight = shiftHistoryToAdd.DayOrNight,
                 NumberOfHoursWorked = kv.Value
             });
 
