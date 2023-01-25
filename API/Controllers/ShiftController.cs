@@ -89,6 +89,10 @@ public class ShiftController : Controller
             _context.Marks.Remove(employeeMark);
         }
 
+        var marksToRemove = _context.Marks.Where(m => m.StockId == shiftHistoryToAdd.StockId);
+
+        _context.Marks.RemoveRange(marksToRemove);
+
         await _context.ShiftInfos.AddRangeAsync(info);
 
         await _context.SaveChangesAsync();

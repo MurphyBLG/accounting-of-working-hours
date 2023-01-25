@@ -236,7 +236,9 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasColumnName("send_comment")
                 .IsRequired(false);
 
-            entity.HasIndex(e => new { e.DateAndTimeOfArrival, e.EmployeeId });
+            entity.HasIndex(e => e.DateAndTimeOfArrival);
+
+            entity.HasIndex(e => e.EmployeeId);
 
             entity.HasOne(d => d.ShiftHistory).WithMany(p => p.ShiftInfos)
                 .HasForeignKey(d => d.ShiftHistoryId)
