@@ -29,6 +29,8 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
     public virtual DbSet<Mark> Marks { get; set; } = null!;
 
+    public virtual DbSet<WorkPlan> WorkPlans { get; set; } = null!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Employee>(entity =>
@@ -318,6 +320,34 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasForeignKey(d => d.StockId);
 
             entity.HasOne(d => d.Employee).WithMany(p => p.Marks)
+                .HasForeignKey(d => d.EmployeeId);
+        });
+
+        modelBuilder.Entity<WorkPlan>(entity => 
+        {
+            entity.HasKey(e => e.WorkPlanId);
+
+            entity.ToTable("work_plans");
+
+            entity.Property(e => e.Month)
+                .HasColumnName("month");
+
+            entity.Property(e => e.EmployeeId)
+                .HasColumnName("employee_id");
+
+            entity.Property(e => e.NumberOfDayShifts)
+                .HasColumnName("number_of_day_shifts");
+
+            entity.Property(e => e.NumberOfHoursPerDayShift)
+                .HasColumnName("number_of_hours_per_day_shift");
+            
+            entity.Property(e => e.NumberOfNightShifts)
+                .HasColumnName("number_of_night_shifts");
+
+            entity.Property(e => e.NumberOfHoursPerNightShift)
+                .HasColumnName("number_of_hours_per_night_shift");
+            
+            entity.HasOne(d => d.Employee).WithMany(p => p.WorkPlans)
                 .HasForeignKey(d => d.EmployeeId);
         });
 

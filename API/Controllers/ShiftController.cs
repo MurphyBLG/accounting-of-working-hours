@@ -177,6 +177,4 @@ public class ShiftController : Controller
 
         return Ok();
     }
-
-
 }

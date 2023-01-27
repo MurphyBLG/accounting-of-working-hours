@@ -3,6 +3,7 @@ using System;
 using API.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     [DbContext(typeof(AccountingOfWorkingHoursContext))]
-    partial class AccountingOfWorkingHoursContextModelSnapshot : ModelSnapshot
+    [Migration("20230127075800_workPlan")]
+    partial class workPlan
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -513,11 +516,11 @@ namespace API.Migrations
 
                     b.Property<int>("NumberOfHoursPerDayShift")
                         .HasColumnType("integer")
-                        .HasColumnName("number_of_hours_per_day_shift");
+                        .HasColumnName("number_of_hors_per_day_shift");
 
                     b.Property<int>("NumberOfHoursPerNightShift")
                         .HasColumnType("integer")
-                        .HasColumnName("number_of_hours_per_night_shift");
+                        .HasColumnName("number_of_hors_per_night_shift");
 
                     b.Property<int>("NumberOfNightShifts")
                         .HasColumnType("integer")

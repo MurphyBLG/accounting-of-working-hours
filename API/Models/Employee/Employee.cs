@@ -54,6 +54,8 @@ public partial class Employee
 
     public virtual ICollection<Mark> Marks { get; } = new List<Mark>();
 
+    public virtual ICollection<WorkPlan> WorkPlans { get; } = new List<WorkPlan>();
+
     public virtual ICollection<ShiftInfo> ShiftInfos { get; } = new List<ShiftInfo>();
     
     public virtual ICollection<ShiftHistory> ShiftHistories { get; } = new List<ShiftHistory>();
