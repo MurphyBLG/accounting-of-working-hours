@@ -16,6 +16,8 @@ public class Shift
 
     public DateTime? ClosingDateAndTime { get; set; }
 
+    public DateTime? LastUpdate { get; set; }
+
 
     public virtual Stock? Stock { get; set; }
 
@@ -29,6 +31,7 @@ public class Shift
         DayOrNight = shiftOpenDTO.DayOrNight;
         OpeningDateAndTime = DateTime.UtcNow;
         Employees = employees;
+        LastUpdate = DateTime.UtcNow;
     }
 
     public Shift()

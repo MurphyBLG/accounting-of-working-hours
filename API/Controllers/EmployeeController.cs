@@ -92,12 +92,16 @@ public class EmployeeController : Controller
         currentEmployee.Password = employeeUpdateDTO.Password;
         currentEmployee.Surname = employeeUpdateDTO.Surname;
         currentEmployee.Patronymic = employeeUpdateDTO.Patronymic;
-        currentEmployee.Birthday = DateOnly.Parse(employeeUpdateDTO.Birthday);
+        currentEmployee.Birthday = DateOnly.FromDateTime(employeeUpdateDTO.Birthday);
         currentEmployee.PassportNumber = employeeUpdateDTO.PassportNumber;
         currentEmployee.PassportIssuer = employeeUpdateDTO.PassportIssuer;
-        currentEmployee.PassportIssueDate = DateOnly.Parse(employeeUpdateDTO.PassportIssueDate);
-        currentEmployee.StartOfTotalSeniority = DateOnly.Parse(employeeUpdateDTO.StartOfTotalSeniority);
-        currentEmployee.StartOfLuchSeniority = DateOnly.Parse(employeeUpdateDTO.StartOfLuchSeniority);
+        currentEmployee.PassportIssueDate = DateOnly.FromDateTime(employeeUpdateDTO.PassportIssueDate);
+        currentEmployee.StartOfTotalSeniority = DateOnly.FromDateTime(employeeUpdateDTO.StartOfTotalSeniority);
+        currentEmployee.StartOfLuchSeniority = DateOnly.FromDateTime(employeeUpdateDTO.StartOfLuchSeniority);
+        currentEmployee.ForkliftControl = employeeUpdateDTO.ForkliftControl;
+        currentEmployee.RolleyesControl = employeeUpdateDTO.RolleyesControl;
+        currentEmployee.Salary = employeeUpdateDTO.Salary;
+        currentEmployee.PercentageOfSalaryInAdvance = employeeUpdateDTO.PercentageOfSalaryInAdvance;
 
         if (currentEmployee.Stocks != employeeUpdateDTO.Stocks)
         {
@@ -156,7 +160,7 @@ public class EmployeeController : Controller
 
         currentEmployee.DateOfStartInTheCurrentPosition = DateOnly.FromDateTime(DateTime.UtcNow);
         currentEmployee.PositionId = _firedPositionId;
-        currentEmployee.DateOfTermination = employeeFireDTO.DateOfTermination == null ? DateOnly.FromDateTime(DateTime.UtcNow) : DateOnly.FromDateTime(DateTime.Parse(employeeFireDTO.DateOfTermination));
+        currentEmployee.DateOfTermination = DateOnly.FromDateTime(employeeFireDTO.DateOfTermination);
         currentEmployee.DateOfStartInTheCurrentStock = null;
         currentEmployee.Stocks = "[]";
         currentEmployee.DateOfStartInTheCurrentLink = null;

@@ -16,6 +16,8 @@ public class ShiftHistory
 
     public DateTime? ClosingDateAndTime { get; set; }
 
+    public DateTime? LastUpdate { get; set; }
+
 
     public virtual Stock? Stock { get; set; }
 

@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Migrations
 {
     /// <inheritdoc />
-    public partial class stocksAreJsons : Migration
+    public partial class pizdec : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,14 +31,14 @@ namespace API.Migrations
                 name: "stock",
                 columns: table => new
                 {
-                    StockId = table.Column<int>(type: "integer", nullable: false)
+                    stockid = table.Column<int>(name: "stock_id", type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     links = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("stock_id", x => x.StockId);
+                    table.PrimaryKey("stock_pkey", x => x.stockid);
                 });
 
             migrationBuilder.CreateTable(
@@ -127,6 +127,123 @@ namespace API.Migrations
                         principalColumn: "position_id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "marks",
+                columns: table => new
+                {
+                    markid = table.Column<Guid>(name: "mark_id", type: "uuid", nullable: false),
+                    stockid = table.Column<int>(name: "stock_id", type: "integer", nullable: false),
+                    employeeid = table.Column<Guid>(name: "employee_id", type: "uuid", nullable: false),
+                    markdate = table.Column<DateTime>(name: "mark_date", type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("mark_pkey", x => x.markid);
+                    table.ForeignKey(
+                        name: "FK_marks_employee_employee_id",
+                        column: x => x.employeeid,
+                        principalTable: "employee",
+                        principalColumn: "employee_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_marks_stock_stock_id",
+                        column: x => x.stockid,
+                        principalTable: "stock",
+                        principalColumn: "stock_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "shift_history",
+                columns: table => new
+                {
+                    shifthistoryid = table.Column<Guid>(name: "shift_history_id", type: "uuid", nullable: false),
+                    stockid = table.Column<int>(name: "stock_id", type: "integer", nullable: false),
+                    employeewhopostedtheshiftid = table.Column<Guid>(name: "employee_who_posted_the_shift_id", type: "uuid", nullable: false),
+                    dayornight = table.Column<string>(name: "day_or_night", type: "character varying(255)", maxLength: 255, nullable: false),
+                    openingdateandtime = table.Column<DateTime>(name: "opening_date_and_time", type: "timestamp with time zone", nullable: true),
+                    employees = table.Column<string>(type: "jsonb", nullable: false),
+                    closingdateandtime = table.Column<DateTime>(name: "closing_date_and_time", type: "timestamp with time zone", nullable: true),
+                    lastupdate = table.Column<DateTime>(name: "last_update", type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("shift_history_pkey", x => x.shifthistoryid);
+                    table.ForeignKey(
+                        name: "FK_shift_history_employee_employee_who_posted_the_shift_id",
+                        column: x => x.employeewhopostedtheshiftid,
+                        principalTable: "employee",
+                        principalColumn: "employee_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_shift_history_stock_stock_id",
+                        column: x => x.stockid,
+                        principalTable: "stock",
+                        principalColumn: "stock_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "shifts",
+                columns: table => new
+                {
+                    shiftid = table.Column<Guid>(name: "shift_id", type: "uuid", nullable: false),
+                    stockid = table.Column<int>(name: "stock_id", type: "integer", nullable: false),
+                    employeewhopostedtheshiftid = table.Column<Guid>(name: "employee_who_posted_the_shift_id", type: "uuid", nullable: false),
+                    dayornight = table.Column<string>(name: "day_or_night", type: "character varying(255)", maxLength: 255, nullable: false),
+                    openingdateandtime = table.Column<DateTime>(name: "opening_date_and_time", type: "timestamp with time zone", nullable: true),
+                    employees = table.Column<string>(type: "jsonb", nullable: false),
+                    closingdateandtime = table.Column<DateTime>(name: "closing_date_and_time", type: "timestamp with time zone", nullable: true),
+                    lastupdate = table.Column<DateTime>(name: "last_update", type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("shift_pkey", x => x.shiftid);
+                    table.ForeignKey(
+                        name: "shift_employee_who_posted_the_shift_id_fkey",
+                        column: x => x.employeewhopostedtheshiftid,
+                        principalTable: "employee",
+                        principalColumn: "employee_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "shift_stock_id_fkey",
+                        column: x => x.stockid,
+                        principalTable: "stock",
+                        principalColumn: "stock_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "shift_infos",
+                columns: table => new
+                {
+                    shiftinfoid = table.Column<Guid>(name: "shift_info_id", type: "uuid", nullable: false),
+                    shifthistoryid = table.Column<Guid>(name: "shift_history_id", type: "uuid", nullable: true),
+                    employeeid = table.Column<Guid>(name: "employee_id", type: "uuid", nullable: false),
+                    dateandtimeofarrival = table.Column<DateTime>(name: "date_and_time_of_arrival", type: "timestamp with time zone", nullable: false),
+                    dayornight = table.Column<string>(name: "day_or_night", type: "character varying(255)", maxLength: 255, nullable: false),
+                    numberofhoursworked = table.Column<int>(name: "number_of_hours_worked", type: "integer", nullable: false),
+                    penalty = table.Column<decimal>(type: "numeric", nullable: true),
+                    penaltycomment = table.Column<string>(name: "penalty_comment", type: "character varying(255)", maxLength: 255, nullable: true),
+                    send = table.Column<decimal>(type: "numeric", nullable: true),
+                    sendcomment = table.Column<string>(name: "send_comment", type: "character varying(255)", maxLength: 255, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("shift_info_pkey", x => x.shiftinfoid);
+                    table.ForeignKey(
+                        name: "shift_info_employee_id_fkey",
+                        column: x => x.employeeid,
+                        principalTable: "employee",
+                        principalColumn: "employee_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "shift_info_shift_history_id_fkey",
+                        column: x => x.shifthistoryid,
+                        principalTable: "shift_history",
+                        principalColumn: "shift_history_id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "employee_passport_number_key",
                 table: "employee",
@@ -149,10 +266,55 @@ namespace API.Migrations
                 column: "position_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_marks_employee_id",
+                table: "marks",
+                column: "employee_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_marks_stock_id",
+                table: "marks",
+                column: "stock_id");
+
+            migrationBuilder.CreateIndex(
                 name: "position_name_key",
                 table: "position",
                 column: "name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shift_history_employee_who_posted_the_shift_id",
+                table: "shift_history",
+                column: "employee_who_posted_the_shift_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shift_history_stock_id",
+                table: "shift_history",
+                column: "stock_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shift_infos_date_and_time_of_arrival",
+                table: "shift_infos",
+                column: "date_and_time_of_arrival");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shift_infos_employee_id",
+                table: "shift_infos",
+                column: "employee_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shift_infos_shift_history_id",
+                table: "shift_infos",
+                column: "shift_history_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shifts_employee_who_posted_the_shift_id",
+                table: "shifts",
+                column: "employee_who_posted_the_shift_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shifts_stock_id",
+                table: "shifts",
+                column: "stock_id");
         }
 
         /// <inheritdoc />
@@ -162,10 +324,22 @@ namespace API.Migrations
                 name: "employee_history");
 
             migrationBuilder.DropTable(
-                name: "stock");
+                name: "marks");
+
+            migrationBuilder.DropTable(
+                name: "shift_infos");
+
+            migrationBuilder.DropTable(
+                name: "shifts");
+
+            migrationBuilder.DropTable(
+                name: "shift_history");
 
             migrationBuilder.DropTable(
                 name: "employee");
+
+            migrationBuilder.DropTable(
+                name: "stock");
 
             migrationBuilder.DropTable(
                 name: "position");

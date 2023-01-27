@@ -10,19 +10,19 @@ public class EmployeeUpdateDTO
 
     public string Patronymic { get; set; } = null!;
 
-    public string Birthday { get; set; } = null!;
+    public DateTime Birthday { get; set; }
 
     public string PassportNumber { get; set; } = null!;
 
     public string? PassportIssuer { get; set; }
 
-    public string PassportIssueDate { get; set; } = null!;
+    public DateTime PassportIssueDate { get; set; }
 
-    public string StartOfTotalSeniority { get; set; } = null!;
+    public DateTime StartOfTotalSeniority { get; set; }
 
-    public string StartOfLuchSeniority { get; set; } = null!;
+    public DateTime StartOfLuchSeniority { get; set; }
 
-    public string? DateOfTermination { get; set; }
+    public DateTime? DateOfTermination { get; set; }
 
     public Guid? PositionId { get; set; }
 
@@ -40,9 +40,9 @@ public class EmployeeUpdateDTO
     
     public decimal QuarterlyBonus { get; set; }
 
-    public string? DateOfStartInTheCurrentPosition { get; set; }
+    public DateTime? DateOfStartInTheCurrentPosition { get; set; }
 
-    public string? DateOfStartInTheCurrentStock { get; set; }
+    public DateTime? DateOfStartInTheCurrentStock { get; set; }
 
-    public string? DateOfStartInTheCurrentLink { get; set; }
+    public DateTime? DateOfStartInTheCurrentLink { get; set; }
 }

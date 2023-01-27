@@ -1,4 +1,4 @@
 public class EmployeeFireDTO
 {
-    public string? DateOfTermination { get; set; }
+    public DateTime DateOfTermination { get; set; }
 }

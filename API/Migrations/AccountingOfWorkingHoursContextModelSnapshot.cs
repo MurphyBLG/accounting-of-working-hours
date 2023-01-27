@@ -287,7 +287,8 @@ namespace API.Migrations
                 {
                     b.Property<Guid>("MarkId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("mark_id");
 
                     b.Property<Guid>("EmployeeId")
                         .HasColumnType("uuid")
@@ -302,7 +303,7 @@ namespace API.Migrations
                         .HasColumnName("stock_id");
 
                     b.HasKey("MarkId")
-                        .HasName("mark_id");
+                        .HasName("mark_pkey");
 
                     b.HasIndex("EmployeeId");
 
@@ -337,6 +338,10 @@ namespace API.Migrations
                         .HasColumnType("jsonb")
                         .HasColumnName("employees");
 
+                    b.Property<DateTime?>("LastUpdate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_update");
+
                     b.Property<DateTime?>("OpeningDateAndTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("opening_date_and_time");
@@ -346,7 +351,7 @@ namespace API.Migrations
                         .HasColumnName("stock_id");
 
                     b.HasKey("ShiftId")
-                        .HasName("shift_id");
+                        .HasName("shift_pkey");
 
                     b.HasIndex("EmployeeWhoPostedTheShiftId");
 
@@ -359,7 +364,8 @@ namespace API.Migrations
                 {
                     b.Property<Guid>("ShiftHistoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("uuid")
+                        .HasColumnName("shift_history_id");
 
                     b.Property<DateTime?>("ClosingDateAndTime")
                         .HasColumnType("timestamp with time zone")
@@ -380,6 +386,10 @@ namespace API.Migrations
                         .HasColumnType("jsonb")
                         .HasColumnName("employees");
 
+                    b.Property<DateTime?>("LastUpdate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_update");
+
                     b.Property<DateTime?>("OpeningDateAndTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("opening_date_and_time");
@@ -389,7 +399,7 @@ namespace API.Migrations
                         .HasColumnName("stock_id");
 
                     b.HasKey("ShiftHistoryId")
-                        .HasName("shift_history_id");
+                        .HasName("shift_history_pkey");
 
                     b.HasIndex("EmployeeWhoPostedTheShiftId");
 
@@ -445,13 +455,14 @@ namespace API.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("shift_history_id");
 
-                    b.HasKey("ShiftInfoId");
+                    b.HasKey("ShiftInfoId")
+                        .HasName("shift_info_pkey");
+
+                    b.HasIndex("DateAndTimeOfArrival");
 
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("ShiftHistoryId");
-
-                    b.HasIndex("DateAndTimeOfArrival", "EmployeeId");
 
                     b.ToTable("shift_infos", (string)null);
                 });
@@ -460,7 +471,8 @@ namespace API.Migrations
                 {
                     b.Property<int>("StockId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("stock_id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StockId"));
 
@@ -476,7 +488,7 @@ namespace API.Migrations
                         .HasColumnName("name");
 
                     b.HasKey("StockId")
-                        .HasName("stock_id");
+                        .HasName("stock_pkey");
 
                     b.ToTable("stock", (string)null);
                 });

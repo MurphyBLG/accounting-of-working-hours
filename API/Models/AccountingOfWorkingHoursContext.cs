@@ -140,9 +140,12 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
         modelBuilder.Entity<Stock>(entity =>
         {
-            entity.HasKey(e => e.StockId).HasName("stock_id");
+            entity.HasKey(e => e.StockId).HasName("stock_pkey");
 
             entity.ToTable("stock");
+
+            entity.Property(e => e.StockId)
+                .HasColumnName("stock_id");
 
             entity.Property(e => e.StockName)
                 .HasMaxLength(255)
@@ -155,7 +158,7 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
         modelBuilder.Entity<Shift>(entity =>
         {
-            entity.HasKey(e => e.ShiftId).HasName("shift_id");
+            entity.HasKey(e => e.ShiftId).HasName("shift_pkey");
 
             entity.ToTable("shifts");
 
@@ -184,6 +187,10 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .IsRequired(false)
                 .HasColumnName("closing_date_and_time");
 
+            entity.Property(e => e.LastUpdate)
+                .HasColumnName("last_update")
+                .IsRequired(false);
+
             entity.HasOne(d => d.Stock).WithMany(p => p.Shifts)
                 .HasForeignKey(d => d.StockId)
                 .HasConstraintName("shift_stock_id_fkey");
@@ -195,7 +202,7 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
         modelBuilder.Entity<ShiftInfo>(entity =>
         {
-            entity.HasKey(e => e.ShiftInfoId);
+            entity.HasKey(e => e.ShiftInfoId).HasName("shift_info_pkey");
 
             entity.ToTable("shift_infos");
 
@@ -251,9 +258,12 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
         modelBuilder.Entity<ShiftHistory>(entity =>
         {
-            entity.HasKey(e => e.ShiftHistoryId).HasName("shift_history_id");
+            entity.HasKey(e => e.ShiftHistoryId).HasName("shift_history_pkey");
 
             entity.ToTable("shift_history");
+
+            entity.Property(e => e.ShiftHistoryId)
+                .HasColumnName("shift_history_id");
 
             entity.Property(e => e.StockId)
                 .HasColumnName("stock_id");
@@ -275,6 +285,10 @@ public partial class AccountingOfWorkingHoursContext : DbContext
             entity.Property(e => e.ClosingDateAndTime)
                 .HasColumnName("closing_date_and_time");
 
+            entity.Property(e => e.LastUpdate)
+                .HasColumnName("last_update")
+                .IsRequired(false);
+
             entity.HasOne(d => d.Stock).WithMany(p => p.ShiftHistories)
                 .HasForeignKey(d => d.StockId);
 
@@ -282,11 +296,14 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasForeignKey(d => d.EmployeeWhoPostedTheShiftId);
         });
 
-        modelBuilder.Entity<Mark>(entity => 
+        modelBuilder.Entity<Mark>(entity =>
         {
-            entity.HasKey(e => e.MarkId).HasName("mark_id");
+            entity.HasKey(e => e.MarkId).HasName("mark_pkey");
 
             entity.ToTable("marks");
+
+            entity.Property(e => e.MarkId)
+                .HasColumnName("mark_id");
 
             entity.Property(e => e.StockId)
                 .HasColumnName("stock_id");

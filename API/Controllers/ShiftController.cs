@@ -1,6 +1,7 @@
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 [Route("[controller]")]
@@ -57,7 +58,8 @@ public class ShiftController : Controller
             DayOrNight = currentShift.DayOrNight,
             OpeningDateAndTime = currentShift.OpeningDateAndTime,
             Employees = currentShift.Employees,
-            ClosingDateAndTime = currentShift.ClosingDateAndTime
+            ClosingDateAndTime = currentShift.ClosingDateAndTime,
+            LastUpdate = currentShift.LastUpdate
         };
 
         await _context.ShiftHistories.AddAsync(shiftHistoryToAdd);
@@ -73,10 +75,10 @@ public class ShiftController : Controller
 
             if (employeeMark is null)
             {
-                return BadRequest($"Сотрудник {kv.Key} не был отмечен");
+                return BadRequest($"Сотрудник {kv.Key} не был отмечен"); // нормально присоединить ФИО
             }
 
-            info.Add(new ShiftInfo 
+            info.Add(new ShiftInfo
             {
                 ShiftInfoId = new Guid(),
                 ShiftHistoryId = shiftHistoryToAdd.ShiftHistoryId,
@@ -89,7 +91,26 @@ public class ShiftController : Controller
             _context.Marks.Remove(employeeMark);
         }
 
-        var marksToRemove = _context.Marks.Where(m => m.StockId == shiftHistoryToAdd.StockId);
+        List<Mark> marksToRemove = _context.Marks.Where(m => m.StockId == shiftHistoryToAdd.StockId)
+            .Include(m => m.Employee).ToList();
+
+        List<ShiftUntrackedEmployeeDTO> untrackedEmployees = new();
+        foreach (var mark in marksToRemove)
+        {
+            if (mark.Employee is not null)
+            {
+                untrackedEmployees.Add(new ShiftUntrackedEmployeeDTO
+                {
+                    EmployeeId = mark.EmployeeId,
+                    FullName = $"{mark.Employee.Surname} {mark.Employee.Name} {mark.Employee.Patronymic}"
+                });
+            }
+        }
+
+        if (untrackedEmployees.Count() != 0)
+        {
+            return BadRequest($"Следующие сотрудники были отмечены, но не были назначены на смену: {JsonConvert.SerializeObject(untrackedEmployees)}");
+        }
 
         _context.Marks.RemoveRange(marksToRemove);
 
@@ -137,4 +158,25 @@ public class ShiftController : Controller
             Employees = employees
         });
     }
+
+    [HttpPut("{shiftId:Guid}")]
+    public async Task<IActionResult> UpdateCurrentShift(Guid shiftId, [FromBody] ShiftUpdateDTO shiftUpdateDTO)
+    {
+        Shift? currentShift = await _context.Shifts.FindAsync(shiftId);
+
+        if (currentShift is null)
+        {
+            return NotFound($"Shift {shiftId} not found");
+        }
+
+        currentShift.Employees = JsonConvert.SerializeObject(shiftUpdateDTO.Employees);
+        currentShift.DayOrNight = shiftUpdateDTO.DayOrNight;
+        currentShift.LastUpdate = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
+
+
 }

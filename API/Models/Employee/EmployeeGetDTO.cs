@@ -12,19 +12,19 @@ public class EmployeeGetDTO
 
     public string Patronymic { get; set; } = null!;
 
-    public string Birthday { get; set; } = null!;
+    public DateOnly Birthday { get; set; }
 
     public string PassportNumber { get; set; } = null!;
 
     public string? PassportIssuer { get; set; }
 
-    public string PassportIssueDate { get; set; } = null!;
+    public DateOnly PassportIssueDate { get; set; } 
 
-    public string StartOfTotalSeniority { get; set; } = null!;
+    public DateOnly StartOfTotalSeniority { get; set; } 
 
-    public string StartOfLuchSeniority { get; set; } = null!;
+    public DateOnly StartOfLuchSeniority { get; set; }
 
-    public string? DateOfTermination { get; set; }
+    public DateOnly? DateOfTermination { get; set; }
 
     public PositionGetDTO Position { get; set; } = null!;
 
@@ -40,11 +40,11 @@ public class EmployeeGetDTO
 
     public decimal PercentageOfSalaryInAdvance { get; set; }
 
-    public string? DateOfStartInTheCurrentPosition { get; set; }
+    public DateOnly? DateOfStartInTheCurrentPosition { get; set; }
 
-    public string? DateOfStartInTheCurrentStock { get; set; }
+    public DateOnly? DateOfStartInTheCurrentStock { get; set; }
 
-    public string? DateOfStartInTheCurrentLink { get; set; }
+    public DateOnly? DateOfStartInTheCurrentLink { get; set; }
 
     public EmployeeGetDTO()
     {
@@ -58,13 +58,13 @@ public class EmployeeGetDTO
         Name = currentEmployee.Name;
         Surname = currentEmployee.Surname;
         Patronymic = currentEmployee.Patronymic;
-        Birthday = currentEmployee.Birthday.ToString();
+        Birthday = currentEmployee.Birthday;
         PassportNumber = currentEmployee.PassportNumber;
         PassportIssuer = currentEmployee.PassportIssuer;
-        PassportIssueDate = currentEmployee.PassportIssueDate.ToString();
-        StartOfTotalSeniority = currentEmployee.StartOfTotalSeniority.ToString();
-        StartOfLuchSeniority = currentEmployee.StartOfLuchSeniority.ToString();
-        DateOfTermination = currentEmployee.DateOfTermination.ToString();
+        PassportIssueDate = currentEmployee.PassportIssueDate;
+        StartOfTotalSeniority = currentEmployee.StartOfTotalSeniority;
+        StartOfLuchSeniority = currentEmployee.StartOfLuchSeniority;
+        DateOfTermination = currentEmployee.DateOfTermination;
         Position = currentEmployeePosition;
         Link = currentEmployee.Link;
         Stocks = stocks;
@@ -72,8 +72,8 @@ public class EmployeeGetDTO
         RolleyesControl = currentEmployee.RolleyesControl;
         Salary = currentEmployee.Salary;
         PercentageOfSalaryInAdvance = currentEmployee.PercentageOfSalaryInAdvance;
-        DateOfStartInTheCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition.ToString();
-        DateOfStartInTheCurrentStock = currentEmployee.DateOfStartInTheCurrentStock.ToString();
-        DateOfStartInTheCurrentLink = currentEmployee.DateOfStartInTheCurrentLink.ToString();
+        DateOfStartInTheCurrentPosition = currentEmployee.DateOfStartInTheCurrentPosition;
+        DateOfStartInTheCurrentStock = currentEmployee.DateOfStartInTheCurrentStock;
+        DateOfStartInTheCurrentLink = currentEmployee.DateOfStartInTheCurrentLink;
     }
 }

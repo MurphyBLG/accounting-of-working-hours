@@ -67,14 +67,14 @@ public partial class Employee
         Name = employeeRegistrationDTO.Name;
         Surname = employeeRegistrationDTO.Surname;
         Patronymic = employeeRegistrationDTO.Patronymic;
-        Birthday = DateOnly.Parse(employeeRegistrationDTO.Birthday);
+        Birthday = DateOnly.FromDateTime(employeeRegistrationDTO.Birthday);
         PassportNumber = employeeRegistrationDTO.PassportNumber;
         PassportIssuer = employeeRegistrationDTO.PassportIssuer;
-        PassportIssueDate = DateOnly.Parse(employeeRegistrationDTO.PassportIssueDate);
-        StartOfTotalSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfTotalSeniority);
-        StartOfLuchSeniority = DateOnly.Parse(employeeRegistrationDTO.StartOfLuchSeniority);
+        PassportIssueDate = DateOnly.FromDateTime(employeeRegistrationDTO.PassportIssueDate);
+        StartOfTotalSeniority = DateOnly.FromDateTime(employeeRegistrationDTO.StartOfTotalSeniority);
+        StartOfLuchSeniority = DateOnly.FromDateTime(employeeRegistrationDTO.StartOfLuchSeniority);
         DateOfTermination = (employeeRegistrationDTO.DateOfTermination == null) ?
-            null : DateOnly.Parse(employeeRegistrationDTO.DateOfTermination);
+            null : DateOnly.FromDateTime(DateTime.Parse(employeeRegistrationDTO.DateOfTermination.ToString()!));
         PositionId = employeeRegistrationDTO.PositionId;
         Salary = employeePosition.Salary;
         QuarterlyBonus = employeePosition.QuarterlyBonus;
@@ -84,8 +84,8 @@ public partial class Employee
         Stocks = employeeRegistrationDTO.Stock;
         ForkliftControl = employeeRegistrationDTO.ForkliftControl;
         RolleyesControl = employeeRegistrationDTO.RolleyesControl;
-        DateOfStartInTheCurrentPosition = DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentPosition);
-        DateOfStartInTheCurrentStock = (employeeRegistrationDTO.DateOfStartInTheCurrentStock == null) ? null : DateOnly.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentStock); // А если не задано?
+        DateOfStartInTheCurrentPosition = DateOnly.FromDateTime(employeeRegistrationDTO.DateOfStartInTheCurrentPosition);
+        DateOfStartInTheCurrentStock = (employeeRegistrationDTO.DateOfStartInTheCurrentStock == null) ? null : DateOnly.FromDateTime(DateTime.Parse(employeeRegistrationDTO.DateOfStartInTheCurrentStock.ToString()!)); // А если не задано?
     }
 
     public Employee()
