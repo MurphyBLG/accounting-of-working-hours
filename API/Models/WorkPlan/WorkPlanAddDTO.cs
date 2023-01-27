@@ -1,9 +1,5 @@
-using API.Models;
-
-public class WorkPlan
+public class WorkPlanAddDTO
 {
-    public Guid WorkPlanId { get; set; }
-
     public int Month { get; set; }
 
     public int Year { get; set; }
@@ -17,7 +13,4 @@ public class WorkPlan
     public int NumberOfNightShifts { get; set; }
 
     public int NumberOfHoursPerNightShift { get; set; }
-
-
-    public Employee? Employee { get; set; }
 }

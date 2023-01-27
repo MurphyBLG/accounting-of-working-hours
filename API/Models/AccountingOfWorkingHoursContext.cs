@@ -323,7 +323,7 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasForeignKey(d => d.EmployeeId);
         });
 
-        modelBuilder.Entity<WorkPlan>(entity => 
+        modelBuilder.Entity<WorkPlan>(entity =>
         {
             entity.HasKey(e => e.WorkPlanId);
 
@@ -331,6 +331,9 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
             entity.Property(e => e.Month)
                 .HasColumnName("month");
+
+            entity.Property(e => e.Year)
+                .HasColumnName("year");
 
             entity.Property(e => e.EmployeeId)
                 .HasColumnName("employee_id");
@@ -340,13 +343,13 @@ public partial class AccountingOfWorkingHoursContext : DbContext
 
             entity.Property(e => e.NumberOfHoursPerDayShift)
                 .HasColumnName("number_of_hours_per_day_shift");
-            
+
             entity.Property(e => e.NumberOfNightShifts)
                 .HasColumnName("number_of_night_shifts");
 
             entity.Property(e => e.NumberOfHoursPerNightShift)
                 .HasColumnName("number_of_hours_per_night_shift");
-            
+
             entity.HasOne(d => d.Employee).WithMany(p => p.WorkPlans)
                 .HasForeignKey(d => d.EmployeeId);
         });

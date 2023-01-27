@@ -17,9 +17,9 @@ public class AttendanceController : Controller
     [HttpGet]
     public IActionResult GetAttendance([FromBody] AttendancePeriodDTO attendancePeriodDTO)
     {
-        List<AttendaceEmployee> employeesOfCurretntStock = GetEmployeesOfCurrentStock(attendancePeriodDTO.StockId, attendancePeriodDTO.Month);
+        List<AttendaceEmployee> employeesOfCurretntStock = GetEmployeesOfCurrentStock(attendancePeriodDTO.StockId, attendancePeriodDTO.Month, attendancePeriodDTO.Year);
 
-        List<AttendanceShiftInfoDTO> shiftsOfCurrentMonth = GetShiftsOfMonth(attendancePeriodDTO.Month);
+        List<AttendanceShiftInfoDTO> shiftsOfCurrentMonth = GetShiftsOfMonth(attendancePeriodDTO.Month, attendancePeriodDTO.Year);
 
         List<AttendanceDTO> response = new();
         foreach (AttendaceEmployee employee in employeesOfCurretntStock)
@@ -37,11 +37,12 @@ public class AttendanceController : Controller
         return Ok(response);
     }
 
-    private List<AttendaceEmployee> GetEmployeesOfCurrentStock(int stockId, int month)
+    private List<AttendaceEmployee> GetEmployeesOfCurrentStock(int stockId, int month, int year)
     {
         IEnumerable<AttendaceEmployee> result = _context.ShiftInfos.Include(s => s.ShiftHistory)
             .Where(s => s.ShiftHistory!.StockId == stockId)
             .Where(s => s.DateAndTimeOfArrival!.Month == month)
+            .Where(s => s.DateAndTimeOfArrival!.Year == year)
             .Include(s => s.Employee)
                 .ThenInclude(e => e!.Position)
                     .Select(shiftInfo => new AttendaceEmployee
@@ -54,10 +55,11 @@ public class AttendanceController : Controller
         return result.ToList();
     }
 
-    private List<AttendanceShiftInfoDTO> GetShiftsOfMonth(int month)
+    private List<AttendanceShiftInfoDTO> GetShiftsOfMonth(int month, int year)
     {
         IEnumerable<AttendanceShiftInfoDTO> result = _context.ShiftInfos
             .Where(s => s.DateAndTimeOfArrival.Month == month)
+            .Where(s => s.DateAndTimeOfArrival.Year == year)
             .Select(shift => new AttendanceShiftInfoDTO
             {
                 ShiftId = shift.ShiftInfoId,
