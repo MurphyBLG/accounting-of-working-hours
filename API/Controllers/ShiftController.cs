@@ -177,4 +177,25 @@ public class ShiftController : Controller
 
         return Ok();
     }
+
+    [HttpPatch("{shiftInfoId:Guid}")]
+    public async Task<IActionResult> UpdateShiftInfo(Guid shiftInfoId, [FromBody] ShiftInfoUpdateDTO shiftInfoUpdateDTO)
+    {
+        ShiftInfo? currentShiftInfo = await _context.ShiftInfos.FindAsync(shiftInfoId);
+
+        if (currentShiftInfo is null)
+        {
+            return NotFound($"Смена {shiftInfoId} не найдена");
+        }
+
+        currentShiftInfo.Penalty = shiftInfoUpdateDTO.Penalty;
+        currentShiftInfo.PenaltyComment = shiftInfoUpdateDTO.PenaltyComment;
+
+        currentShiftInfo.Send = shiftInfoUpdateDTO.Send;
+        currentShiftInfo.SendComment = shiftInfoUpdateDTO.SendComment;
+
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }

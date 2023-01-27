@@ -17,7 +17,7 @@ public class AttendanceController : Controller
     [HttpGet]
     public IActionResult GetAttendance([FromBody] AttendancePeriodDTO attendancePeriodDTO)
     {
-        List<AttendaceEmployee> employeesOfCurretntStock = GetEmployeesOfCurrentStock(attendancePeriodDTO.StockId);
+        List<AttendaceEmployee> employeesOfCurretntStock = GetEmployeesOfCurrentStock(attendancePeriodDTO.StockId, attendancePeriodDTO.Month);
 
         List<AttendanceShiftInfoDTO> shiftsOfCurrentMonth = GetShiftsOfMonth(attendancePeriodDTO.Month);
 
@@ -37,28 +37,21 @@ public class AttendanceController : Controller
         return Ok(response);
     }
 
-    private List<AttendaceEmployee> GetEmployeesOfCurrentStock(int stockId)
+    private List<AttendaceEmployee> GetEmployeesOfCurrentStock(int stockId, int month)
     {
-        IEnumerable<AttendaceEmployee> result = _context.Employees.Include(e => e.Position)
-            .Where(ContainsStock(stockId))
-            .Select(employee => new AttendaceEmployee
-            {
-                EmployeeId = employee.EmployeeId,
-                FullName = $"{employee.Surname} {employee.Name} {employee.Patronymic}",
-                PositionName = employee.Position!.Name
-            });
+        IEnumerable<AttendaceEmployee> result = _context.ShiftInfos.Include(s => s.ShiftHistory)
+            .Where(s => s.ShiftHistory!.StockId == stockId)
+            .Where(s => s.DateAndTimeOfArrival!.Month == month)
+            .Include(s => s.Employee)
+                .ThenInclude(e => e!.Position)
+                    .Select(shiftInfo => new AttendaceEmployee
+                    {
+                        EmployeeId = shiftInfo.EmployeeId,
+                        FullName = $"{shiftInfo.Employee!.Surname} {shiftInfo.Employee.Name} {shiftInfo.Employee.Patronymic}",
+                        PositionName = shiftInfo.Employee.Position!.Name
+                    }).Distinct();
 
         return result.ToList();
-    }
-
-    private static Func<Employee, bool> ContainsStock(int stockId)
-    {
-        return e =>
-        {
-            HashSet<int> stocks = JsonConvert.DeserializeObject<HashSet<int>>(e.Stocks!)!;
-
-            return stocks.Contains(stockId);
-        };
     }
 
     private List<AttendanceShiftInfoDTO> GetShiftsOfMonth(int month)
