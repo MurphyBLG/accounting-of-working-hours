@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace API.Models;
 
@@ -14,8 +15,10 @@ public partial class Position
 
     public string InterfaceAccesses { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual ICollection<EmployeeHistory> EmployeeHistories { get; } = new List<EmployeeHistory>();
 
+    [JsonIgnore]
     public virtual ICollection<Employee> Employees { get; } = new List<Employee>();
 
     public Position()
@@ -29,6 +32,6 @@ public partial class Position
         Name = positionPostDTO.Name;
         Salary = positionPostDTO.Salary;
         QuarterlyBonus = positionPostDTO.QuarterlyBonus;
-        InterfaceAccesses = JsonSerializer.Serialize(positionPostDTO.InterfaceAccesses);
+        InterfaceAccesses = System.Text.Json.JsonSerializer.Serialize(positionPostDTO.InterfaceAccesses);
     }
 }

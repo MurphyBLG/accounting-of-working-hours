@@ -1,8 +1,9 @@
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
-//[Authorize]
+[Authorize]
 public class WorkPlanController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;
@@ -24,7 +25,6 @@ public class WorkPlanController : Controller
             return BadRequest("Рабочий план для данного сотрудника на данный промежуток времени уже есть!");
         }
 
-
         try
         {
             await _context.WorkPlans.AddAsync(new WorkPlan
@@ -40,12 +40,14 @@ public class WorkPlanController : Controller
             });
 
             await _context.SaveChangesAsync();
+            
+            return Ok();
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
-
-        return Ok();
     }
+
+
 }

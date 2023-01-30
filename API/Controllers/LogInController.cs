@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text.Json;
 using API.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -5,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 [Route("[controller]")]
-//[Authorize]
+[Authorize]
 public class LogInController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;
@@ -38,20 +39,27 @@ public class LogInController : Controller
             _config["Jwt:Issuer"]!,
             _config["Jwt:Audience"]!);
 
+        RefreshToken refreshToken = _tokenService.GenerateRefreshToken();
+
+        currentEmployee.RefreshToken = refreshToken.Token;
+        currentEmployee.RefreshTokenExpires = refreshToken.Expires;
+
+        SetRefreshToken(refreshToken);
+
         if (currentEmployee.PositionId == _moverId)
         {
-            _context.Marks.Add(new Mark 
+            _context.Marks.Add(new Mark
             {
                 MarkId = new Guid(),
                 EmployeeId = currentEmployee.EmployeeId,
                 StockId = JsonConvert.DeserializeObject<List<int>>(currentEmployee.Stocks!)![0],
                 MarkDate = DateTime.UtcNow
             });
-
-            _context.SaveChanges();
         }
 
-        List <StockDTO> stocksWithNames = _idstoIdsPlusDataService.StocksToList(currentEmployee, _context);
+        _context.SaveChanges();
+
+        List<StockDTO> stocksWithNames = _idstoIdsPlusDataService.StocksToList(currentEmployee, _context);
 
         return Ok(new InterfaceAccessesDTO
         {
@@ -77,8 +85,53 @@ public class LogInController : Controller
         return currentEmployee;
     }
 
-    // private async Task WriteMover(Employee employee)
-    // {
-    //     int stockId = _context.
-    // }
+    [AllowAnonymous]
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken([FromBody] string token)
+    {
+        string? refreshToken = Request.Cookies["refreshToken"];
+
+        if (refreshToken is null)
+        {
+            return Unauthorized("Token not found");
+        }
+
+        var oldClaims = _tokenService.GetPrincipalFromExpiredToken(token, _config);
+
+        Guid currentEmployeeId = new(oldClaims.FindFirstValue("EmployeeId")!);
+        Employee? currentEmployee = await _context.Employees.FindAsync(currentEmployeeId);
+
+        if (currentEmployee is null)
+        {
+            return NotFound("Employee is not found");
+        }
+
+        if (currentEmployee.RefreshToken != refreshToken)
+        {
+            return Unauthorized("Invalid refresh token");
+        }
+
+        if (currentEmployee.RefreshTokenExpires < DateTime.Now)
+        {
+            return Unauthorized("Token expired");
+        }
+
+        string newToken = _tokenService.BuildToken(currentEmployee,
+            _config["JWT:Key"]!,
+            _config["Jwt:Issuer"]!,
+            _config["Jwt:Audience"]!);
+
+        return Ok(newToken);
+    }
+
+    private void SetRefreshToken(RefreshToken refreshToken)
+    {
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Expires = refreshToken.Expires
+        };
+
+        Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
+    }
 }

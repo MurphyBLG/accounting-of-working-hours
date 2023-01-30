@@ -92,3 +92,6 @@
 /home/vitaliy/Documents/Accountig-of-working-hours/API/obj/Debug/net7.0/API.genruntimeconfig.cache
 /home/vitaliy/Documents/Accountig-of-working-hours/API/obj/Debug/net7.0/ref/API.dll
 /home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Newtonsoft.Json.dll
+/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Microsoft.AspNetCore.JsonPatch.dll
+/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+/home/vitaliy/Documents/Accountig-of-working-hours/API/bin/Debug/net7.0/Newtonsoft.Json.Bson.dll

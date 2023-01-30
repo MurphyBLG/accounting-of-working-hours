@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using API.Models;
 using Microsoft.IdentityModel.Tokens;
@@ -16,14 +17,25 @@ public class TokenService : ITokenService
             new Claim("EmployeeId", employee.EmployeeId.ToString()),
         };
 
-        var token = new JwtSecurityToken (
+        var token = new JwtSecurityToken(
             issuer,
             audience,
             claims,
-            expires: DateTime.Now.AddMinutes(60),
+            expires: DateTime.Now.AddMinutes(20),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public RefreshToken GenerateRefreshToken()
+    {
+        var refreshToken = new RefreshToken
+        {
+            Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+            Expires = DateTime.UtcNow.AddMinutes(30)
+        };
+
+        return refreshToken;
     }
 
     public Employee? GetCurrentEmployee(ClaimsPrincipal User, AccountingOfWorkingHoursContext context)
@@ -43,5 +55,24 @@ public class TokenService : ITokenService
         }
 
         return currentEmployee;
+    }
+
+    public ClaimsPrincipal? GetPrincipalFromExpiredToken(string? token, IConfiguration config)
+    {
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT:Key"]!)),
+            ValidateLifetime = false
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+        if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+
+        return principal;
     }
 }

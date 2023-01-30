@@ -1,10 +1,11 @@
 using API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 [Route("[controller]")]
-//[Authorize]
+[Authorize]
 public class AttendanceController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;

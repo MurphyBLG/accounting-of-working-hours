@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 [Route("[controller]")]
-//[Authorize]
+[Authorize]
 public class StockController : Controller
 {
     private readonly AccountingOfWorkingHoursContext _context;

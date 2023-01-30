@@ -26,6 +26,8 @@ public class EmployeeRegistrationDTO
 
     public Guid? PositionId { get; set; }
 
+    public decimal Salary { get; set; }
+
     public string? Link { get; set; }
 
     public string? Stock { get; set; }
@@ -36,7 +38,7 @@ public class EmployeeRegistrationDTO
 
     public int PercentageOfSalaryInAdvance { get; set; }
 
-    public DateTime DateOfStartInTheCurrentPosition { get; set; }
+    public DateTime? DateOfStartInTheCurrentPosition { get; set; }
 
     public DateTime? DateOfStartInTheCurrentStock { get; set; }
 

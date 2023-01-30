@@ -83,6 +83,12 @@ public partial class AccountingOfWorkingHoursContext : DbContext
                 .HasColumnType("jsonb")
                 .HasColumnName("stocks");
 
+            entity.Property(e => e.RefreshToken)
+                .HasColumnName("refresh_token");
+
+            entity.Property(e => e.RefreshTokenExpires)
+                .HasColumnName("refresh_token_expires");
+
             entity.HasOne(d => d.Position).WithMany(p => p.Employees)
                 .HasForeignKey(d => d.PositionId)
                 .HasConstraintName("employee_position_id_fkey");

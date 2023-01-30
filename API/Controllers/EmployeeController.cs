@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("[controller]")]
-//[Authorize]
+[Authorize]
 public class EmployeeController : Controller
 {
     private readonly Guid _firedPositionId = new("9ad29fb2-f9c4-4e4d-9155-12af0227ea67");
@@ -17,26 +17,29 @@ public class EmployeeController : Controller
     }
 
     [HttpPost]
-    public IActionResult RegisterEmployee([FromBody] EmployeeRegistrationDTO employeeRegistrationDTO)
+    public async Task<IActionResult> RegisterEmployee([FromBody] EmployeeRegistrationDTO employeeRegistrationDTO)
     {
         try
         {
-            Position? currentEmployeePosition = _context.Positions.Find(employeeRegistrationDTO.PositionId);
+            Position? currentEmployeePosition = await _context.Positions.FindAsync(employeeRegistrationDTO.PositionId);
 
             if (currentEmployeePosition == null)
             {
                 return BadRequest("Такой должности не существует");
             }
 
-            _context.Employees.Add(new Employee(employeeRegistrationDTO, currentEmployeePosition));
+            Employee employeeToAdd = new Employee(employeeRegistrationDTO, currentEmployeePosition);
+
+            await _context.Employees.AddAsync(employeeToAdd);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(employeeToAdd);
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
-
-        _context.SaveChanges();
-        return Ok();
     }
 
     [HttpGet("{EmployeeId}")]
