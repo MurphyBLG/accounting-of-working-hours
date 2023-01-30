@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class ShiftController : Controller
 {

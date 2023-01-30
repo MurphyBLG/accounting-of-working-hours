@@ -2,7 +2,7 @@ using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class EmployeeController : Controller
 {
@@ -80,9 +80,9 @@ public class EmployeeController : Controller
     }
 
     [HttpPut("{EmployeeId}")]
-    public IActionResult UpdateEmployee(string employeeId, [FromBody] EmployeeUpdateDTO employeeUpdateDTO)
+    public async Task<IActionResult> UpdateEmployee(string employeeId, [FromBody] EmployeeUpdateDTO employeeUpdateDTO)
     {
-        Employee? currentEmployee = _context.Employees.Find(new Guid(employeeId));
+        Employee? currentEmployee = await _context.Employees.FindAsync(new Guid(employeeId));
 
         if (currentEmployee == null)
         {
@@ -133,16 +133,18 @@ public class EmployeeController : Controller
 
         try
         {
-            _context.EmployeeHistories.Add(employeeHistory);
+            await _context.EmployeeHistories.AddAsync(employeeHistory);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
         catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }
 
-        return Ok();
+        await _context.Entry(currentEmployee).Reference(e => e.Position).LoadAsync();
+
+        return Ok(currentEmployee);
     }
 
     [HttpDelete("{EmployeeId}")]

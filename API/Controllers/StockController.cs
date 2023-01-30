@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class StockController : Controller
 {

@@ -2,7 +2,7 @@ using API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class WorkPlanController : Controller
 {

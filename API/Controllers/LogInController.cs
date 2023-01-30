@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [Authorize]
 public class LogInController : Controller
 {
@@ -98,7 +98,7 @@ public class LogInController : Controller
 
         var oldClaims = _tokenService.GetPrincipalFromExpiredToken(token, _config);
 
-        Guid currentEmployeeId = new(oldClaims.FindFirstValue("EmployeeId")!);
+        Guid currentEmployeeId = new(oldClaims!.FindFirstValue("EmployeeId")!);
         Employee? currentEmployee = await _context.Employees.FindAsync(currentEmployeeId);
 
         if (currentEmployee is null)
